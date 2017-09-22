@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+       
+</head>
+
+<body>
+    <h3><a href="{{ url_for('show_profiles') }}">Profiles</a></h3>    
+    <h3><a href="{{ url_for('show_all') }}">Blogs and Forums</a></h3>
+    <h3><a href="{{ url_for('show_all_tweets') }}">Social Networks</a></h3>
+    <h3><a href="{{ url_for('logout') }}">Logout</a></h3>
+<div>
+    <div class="col-sm-offset-2 profile-form">
+        <form class="form-inline" action="/profiles", method="POST">
+            <div class="form-group">
+              <label for="profile-name">Profile Name:</label>
+              <input type="text" class="form-control" id="profile-name" name="profile_name" required >
+            </div>
+            <button type="submit" class="btn btn-primary">Save Profile</button>
+        </form>
+    {% if profiles %}
+        <table id="example" class="table" cellspacing='0' width='100%'>
+            <thead>
+                <tr>
+                    <th> S/N </th>
+                    <th>Name</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in profiles %}
+                <tr>
+                    <td> {{ loop.index }}
+                    <td><a href="/tweets/{{profile.name}}"> {{ profile.name }} </a></td>
+                    <td>
+                      
+                        <a class="pointer" title="Edit profile" onclick="editProfile({{ profile.id }}, '{{ profile.name }}')"><span class="glyphicon glyphicon-pencil"></span></a> &emsp;
+                        <a class="pointer" title="Delete profile" onclick="deleteProfile({{ profile.id }})"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+                {% endfor %} 
+            </tbody>
+        </table>
+    {% else %}
+        <h3> No saved profiles found </h3>
+    {% endif %}
+</div>
+<script type="text/javascript">
+  function deleteProfile(profileId) {
+    if (confirm('Are you sure you want to delete this profile?')) {
+      $.ajax({
+        url: '/profiles/' + profileId ,
+        type: 'DELETE',
+        success: function(result) {
+            location.reload()
+        }
+      })
+    }
+  }
+
+  function editProfile(profileId, profileName) {
+    console.log(profileId, profileName)
+    var profilename = prompt("Enter the new profile name", profileName);
+    
+    if (profilename) {
+      $.ajax({
+        url: '/profiles/' + profileId ,
+        type: 'PUT',
+        data: {
+          profile_name: profilename
+        },
+        success: function(result) {
+            location.reload()
+        }
+      })
+    }
+  }
+</script> 
+</body>
+</html>

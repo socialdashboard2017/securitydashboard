@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='tweet.css') }}">    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+    <script src="//cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            $.fn.dataTable.moment( 'MMM DD YYYY' );
+            $('#example2').DataTable( {
+                "order": [[ 3, "asc" ]]
+            },{
+                "order": [[ 1, "asc" ]] 
+            } );
+
+        });
+
+        function fetchTweets() {
+          location.pathname = '/tweets/' + $('#profile').val()
+          console.log($('#profile').val())
+        }
+    </script>
+</head>
+    
+<body>
+    <h3><a href="{{ url_for('show_profiles') }}">Profiles</a></h3>    
+    <h3><a href="{{ url_for('show_all') }}">Blogs and Forums</a></h3></li>
+    <h3><a href="{{ url_for('show_all_tweets') }}">Social Networks</a></h3></li>
+    <h3><a href="{{ url_for('logout') }}">Logout</a></h3></li>
+    <form>
+      <div class="form-group">
+        <label for="profile"> Choose Profile: </label>
+        <select name="profile" id="profile">
+          {% for p in profiles %}
+              <option value="{{p.name}}" {% if p.name==profile.name %} selected {% endif %}> {{ p.name }}</option>
+          {% endfor %}
+        </select>
+      <input type="button" class="btn btn-primary" value="Fetch tweets" onclick="fetchTweets()" />      
+      </div>
+    </form>
+    {% if profile %} 
+        <h3 class="align-center"> Showing tweets for {{ profile.name }} </h3>
+    {% endif %}
+    <table id="example2" class="display" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>Tweet</th>
+                <th>Date</th>
+                <th>Cve</th>
+                <th>Score--</th>
+		        <th>Url</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for y in tweets %}
+            <tr>
+                <td>{{ y.tweet }}</td>            
+                <td>{{ y.date }}</td>
+                <td>{{ y.cve }}</td>
+                <td>{{ y.score }}</td>
+		        <td><a href="{{ y.url }}"> {{ y.url }} </a></td>
+            </tr>
+            {% endfor %} 
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</body>
+
+</html>

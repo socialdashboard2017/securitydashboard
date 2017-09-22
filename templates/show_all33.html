@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
+    <script>
+    $(document).ready(function() {
+      $.fn.dataTable.moment( 'MMM DD YYYY' );
+      $('#example').DataTable({
+                "order": [[ 1, "desc" ]]
+            });
+    });
+    </script>
+    <script>
+    $(document).ready(function () {
+      $('#example').DataTable({
+		    "retrieve": 'true',
+        "order": [[ 3, "desc" ]]
+        })
+    });
+    </script>
+</head>
+
+<body>
+    <h3><a href="{{ url_for('show_profiles') }}">Profiles</a></h3>        
+    <h3><a href="{{ url_for('show_all') }}">Blogs and Forums</a></h3>
+    <h3><a href="{{ url_for('show_all_tweets') }}">Social Networks</a></h3>
+    <h3><a href="{{ url_for('logout') }}">Logout</a></h3>
+<div>
+    <table id="example" class="display" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+		            <th>CVE</th>
+                <th>Score</th>
+		            <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vuln in vulns %}
+            <tr>
+            {% set mylist = vuln.name.split(',') %}
+            {% if vuln.source == 'securityfocus' or vuln.source == 'fulldisclosure'  %}         
+                <td><a href=http://{{ mylist[1][9:-2] }}  target="_blank">{{ mylist[0][2:-1] }}</td>            
+                <td>{{ vuln.date }}</td>
+                <td>{{ vuln.my_cve }}</td>
+                <td>{{ vuln.score }}</td>
+                <td>{{ vuln.source }}</td>
+            {% else %}         
+                <td><a href=https://{{ mylist[1][9:-2] }}  target="_blank">{{ mylist[0][2:-1] }}</td>            
+                <td>{{ vuln.date }}</td>
+		            <td>{{ vuln.my_cve }}</td>
+                <td>{{ vuln.score }}</td>
+		            <td>{{ vuln.source }}</td>
+            {% endif %} 
+            </tr>
+            {% endfor %} 
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
