@@ -75,12 +75,14 @@
         </a>
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
-            <a href="/" class="navbar-brand">Blogs and Forums</a>
+            <a href="/" class="navbar-brand">Dashboard</a>
             
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav pull-right">
-                <li class="active"><a href="/">Blogs and Forums</a></li>
-                <li class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url_for('show_all_tweets') }}">Social Networks</a>
+                
+                <li class="active"><a href="/">Dashboard</a></li>
+                <li class=""><a href="/blogsforum">Blogs and Forums</a></li>
+                <li class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="/socials">Social Networks</a>
                             <ul class="dropdown-menu">
 
                   
@@ -119,37 +121,8 @@
 
         <!-- Main content -->
         <section class="content">
-            <table id="example" class="display" cellspacing='0' width='100%'>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>CVE</th>
-                        <th>ScoreSS</th>
-                        <th>Source</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for vuln in vulns %}
-                    <tr>
-                    {% set mylist = vuln.name.split(',') %}
-                    {% if vuln.source == 'securityfocus' or vuln.source == 'fulldisclosure'  %}         
-                        <td><a href=http://{{ mylist[1][9:-2] }}  target="_blank">{{ mylist[0][2:-1] }}</td>            
-                        <td>{{ vuln.date }}</td>
-                        <td>{{ vuln.my_cve }}</td>
-                        <td>{{ vuln.score }}</td>
-                        <td>{{ vuln.source }}</td>
-                    {% else %}         
-                        <td><a href=https://{{ mylist[1][9:-2] }}  target="_blank">{{ mylist[0][2:-1] }}</td>            
-                        <td>{{ vuln.date }}</td>
-                        <td>{{ vuln.my_cve }}</td>
-                        <td>{{ vuln.score }}</td>
-                        <td>{{ vuln.source }}</td>
-                    {% endif %} 
-                    </tr>
-                    {% endfor %} 
-                </tbody>
-            </table>
+          <h1>MAIN DASHBORD</h1>
+          <h3>Work in progress</h3>
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
       <footer class="main-footer">

@@ -18,7 +18,7 @@ for idx, url in enumerate(allhtml):
 	if idx != 2: #---------------------------------------------------------el != 2
 		bsObj.append(BeautifulSoup(url, 'html.parser'))
 	else:
-		bsObj.append(BeautifulSoup(url, 'html5lib'))
+		bsObj.append(BeautifulSoup(url, 'html.parser'))
 		
 def packetstorm():
   #get dates of vulnerabilities

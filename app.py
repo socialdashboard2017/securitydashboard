@@ -22,11 +22,11 @@ db.create_all()
 def ssl_required(fn):
 		@wraps(fn)
 		def decorated_view(*args, **kwargs):
-				if request.url.startswith("http://"):
-						return redirect(request.url.replace("http://", "https://"))
-				else:
-						return fn(*args, **kwargs)
-
+				#if request.url.startswith("http://"):
+				#		return redirect(request.url.replace("http://", "https://"))
+				#else:
+				#		return fn(*args, **kwargs)
+				return fn(*args, **kwargs)
 		return decorated_view
 
 def login_required(f):
@@ -86,37 +86,33 @@ def fetch_and_save_tweets(profile_name):
 					db.session.add(current_tweet)
 		
 		db.session.commit()
-	
+
+
+#MAIN DASHBOARD
 @app.route('/')
 @ssl_required
 @login_required
 def show_all():
-	# if not session.get('logged_in'):
-	# 	session['logged_in'] = False
-	# 	return render_template('login.html')
-	# else:
-	# db.create_all()
-	# db.session.query(vulns).delete()
+	return render_template('show_dashboard.html')
+	
+@app.route('/blogsforum')
+@ssl_required
+@login_required
+def show_blogsforum():
+
 	check_on_all_tables()
 	past = db.session.query(vulns.name)
 
 	mypast = [el.name for el in past]
 
-	#print(mypast)
-	#print('MYPAST')
 
 	body = [str(mypast)[1:-1].replace('"', '')]
 
-	#print(body)
-	#print('BODY')
-
+	
 	real_past = []
 	for el in body:
 		if el:
 			real_past.append(str(el[0]))
-
-	#print (real_past)
-	#print('REAL_PAST')
 
 	i = 0
 	for dictionary in allDict:
@@ -136,8 +132,10 @@ def show_all():
 
 	db.session.commit()
 
-	return render_template('show_all.html', vulns=db.session.query(vulns).all() )
+	return render_template('show_blogsforum.html', vulns=db.session.query(vulns).all() )
 
+
+#LOGIN FORM
 @app.route('/login', methods=['GET','POST'])
 @ssl_required
 def do_admin_login():
@@ -158,6 +156,7 @@ def do_admin_login():
 def get_num_from_str(x):
 		return float(''.join(ele for ele in x if ele in '-.0123456789'))
 
+#TWEETS
 @app.route('/tweets/')
 @app.route('/tweets/<profile_name>')
 @ssl_required
@@ -181,7 +180,9 @@ def show_all_tweets(profile_name=''):
 	else:
 		saved_tweets = []
 	return render_template('show_all_tweets.html', tweets=saved_tweets, profile=profile, profiles=saved_profiles)
-	
+
+
+#PROFILES LIST	
 @app.route('/profiles', methods=['GET', 'POST'])
 @ssl_required
 @login_required
@@ -203,6 +204,19 @@ def show_profiles():
 		return redirect(url_for('show_profiles'))
 
 
+
+#SOCIAL DASHBOARD
+@app.route('/socials', methods=['GET', 'POST'])
+@ssl_required
+@login_required
+def show_socials():
+	if request.method == 'GET':
+		saved_profiles = db.session.query(profiles).all()
+		profile_name_invalid = session["profile_name_invalid"] if "profile_name_invalid" in session else False
+		return render_template('show_socials.html', profiles=saved_profiles, profile_name_invalid=profile_name_invalid)
+
+
+#KEYWORDS EDITING
 @app.route('/keywords', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @ssl_required
 @login_required
@@ -250,32 +264,9 @@ def show_keywords():
 		return jsonify({ 'message': 'keyword update was not successful'}), 400
 
 
-# @app.route('/keywordsedit', methods=['PUT', 'DELETE'])
-# def manage_keyword(tag_name):
-# 	if request.method == 'DELETE':
-# 		keyword = db.session.query(keyword_tags).filter_by(tag_name=tag_name).first()
-# 		if keyword:
-# 			db.session.delete(keyword)
-# 			db.session.commit()
-
-# 			return jsonify({ 'message': 'keyword deleted successfully'}), 204
-		
-# 		return jsonify({ 'message': 'keyword deletion was not successful'}), 400
-		
-# 	if request.method == 'PUT':
-# 		request_data = request.data or request.form
-# 		to_update_tag_text = request_data.get('to_update_tag_text')
-# 		if to_update_tag_text:
-# 			keyword = db.session.query(keyword_tags).filter_by(tag_name=tag_name).first()
-# 			if keyword and keyword.tag_name != to_update_tag_text:
-# 				keyword.tag_name = to_update_tag_text
-# 				db.session.commit()
-
-# 			return jsonify({ 'message': 'keyword updated successfully'}), 200
-			
-# 		return jsonify({ 'message': 'keyword update was not successful'}), 400
 
 
+#SHOW SINGLE PROFILE
 @app.route('/profiles/<int:profile_id>', methods=['PUT', 'DELETE'])
 def manage_profile(profile_id):
 	if request.method == 'DELETE':
@@ -310,5 +301,6 @@ def logout():
 
 
 if __name__ == '__main__':
-	app.run(debug=True, ssl_context='adhoc')
+	#app.run(debug=True, ssl_context='adhoc',host='0.0.0.0', port=8080)
+	app.run(debug=True,host='0.0.0.0', port=8080)
 	# app.run(debug=True)
