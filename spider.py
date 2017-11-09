@@ -2,11 +2,15 @@
 import urllib.request
 import re
 import lxml
+import requests
+import os
+import os.path
 
 mylist = ['http://seclists.org/fulldisclosure/', 'https://googleprojectzero.blogspot.it/', 'http://www.securityfocus.com/vulnerabilities', 'https://www.rapid7.com/db/modules', 'https://cxsecurity.com/exploit/', 'https://packetstormsecurity.com/files/tags/exploit/']
 
 def getpage(alist):
-  return [ urllib.request.urlopen(url) for url in alist  ]
+  #return [ urllib.request.urlopen(url) for url in alist  ]
+  return [ requests.get(url).text for url in alist  ]
 
 allhtml = getpage(mylist)
 # allhtml = []
@@ -571,8 +575,13 @@ def cve(name):
 def get_cvss(cve_vuln):
 	
 	if cve_vuln != '':
+		if os.path.isfile("caches/"+cve_vuln):
+			print (cve_vuln + " retrieved from cache...")
+			with open("caches/"+cve_vuln,'r') as f:
+				return f.read()
 		link = []
-		x = str('https://nvd.nist.gov/vuln/detail/CVE-' + cve_vuln)
+		#x = str('https://nvd.nist.gov/vuln/detail/CVE-' + cve_vuln)
+		x = str('https://nvd.nist.gov/vuln/detail/' + cve_vuln)
 		link.append(x) 
 		page = getpage(link)		
 		bs4Obj = BeautifulSoup(page[0], 'html.parser')
@@ -580,13 +589,15 @@ def get_cvss(cve_vuln):
 		
 		if vuln_score is None:
 			vuln_score = 'Awaiting Analysis'
+			print ('Awaiting Analysis for ' + cve_vuln)
 
 		else:
 			vuln_score = vuln_score.get_text()
 			vuln_score = vuln_score.replace('\r', '')
 			vuln_score = vuln_score.replace('\n', '')
 			vuln_score = vuln_score.replace(' ', '')
-
+			with open("caches/"+cve_vuln, 'w') as f:
+				f.write(vuln_score)
 		return vuln_score
 
 

@@ -51,10 +51,11 @@ def get_profile(profile_name):
 
 def check_on_all_tables():
 	total_tables_length = len(db.session.query(vulns).all()) + len(db.session.query(Tweets).all())
-	if total_tables_length >= 9000:
-		db.session.query(vulns).delete()
-		db.session.query(Tweets).delete()
-		print('Deleting all records since total table length is >= 9000')
+	
+	#if total_tables_length >= 9000:
+	#	db.session.query(vulns).delete()
+	#	db.session.query(Tweets).delete()
+	#	print('Deleting all records since total table length is >= 9000')
 				
 def fetch_and_save_tweets(profile_name):
 	check_on_all_tables()
@@ -94,7 +95,10 @@ def fetch_and_save_tweets(profile_name):
 @login_required
 def show_all():
 	return render_template('show_dashboard.html')
-	
+
+
+
+#BLOGS AND FORUMS	
 @app.route('/blogsforum')
 @ssl_required
 @login_required
