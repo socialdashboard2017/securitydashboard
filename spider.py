@@ -6,8 +6,6 @@ import requests
 import os
 import os.path
 
-
-
 from flask import Flask, request, flash, url_for, redirect, render_template, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
@@ -19,14 +17,37 @@ app.config.from_object('config.BaseConfig')
 
 db = SQLAlchemy(app)
 
+db.create_all()
+
+
 import datetime
 
 now = datetime.datetime.now()
 
-
-from models import *
-
 mylist = ['http://seclists.org/fulldisclosure/', 'https://googleprojectzero.blogspot.it/', 'http://www.securityfocus.com/vulnerabilities', 'https://www.rapid7.com/db/modules', 'https://cxsecurity.com/exploit/', 'https://packetstormsecurity.com/files/tags/exploit/']
+
+##TEST
+
+class vulns(db.Model):
+	id = db.Column('vuln_id', db.Integer, primary_key=True)
+	name = db.Column(db.String(500))
+	date = db.Column(db.String(500))
+	my_cve = db.Column(db.String(50))
+	score = db.Column(db.String(500))
+	source = db.Column(db.String(500))
+
+
+	def __init__(self, name, date, my_cve, score, source):
+		self.name = name
+		self.date = date
+		self.my_cve = my_cve
+		self.score = score
+		self.source = source
+
+##FINE TEST
+
+
+
 
 def getpage(alist):
   #return [ urllib.request.urlopen(url) for url in alist  ]
@@ -824,7 +845,7 @@ def realDict_f(function):
 	return realDict
 
 
-def save_scraped(vulns):
+def save_scraped():
 	past = db.session.query(vulns.name)
 	mypast = [el.name for el in past]
 	body = [str(mypast)[1:-1].replace('"', '')]

@@ -103,7 +103,7 @@ def show_all():
 @ssl_required
 @login_required
 def show_blogsforum():
-	save_scraped(vulns)
+	#save_scraped()
 	return render_template('show_blogsforum.html', vulns=db.session.query(vulns).all() )
 
 
