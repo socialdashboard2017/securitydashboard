@@ -6,6 +6,26 @@ import requests
 import os
 import os.path
 
+
+
+from flask import Flask, request, flash, url_for, redirect, render_template, session, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
+from sqlalchemy import exists
+
+app = Flask(__name__)
+
+app.config.from_object('config.BaseConfig')
+
+db = SQLAlchemy(app)
+
+import datetime
+
+now = datetime.datetime.now()
+
+
+from models import *
+
 mylist = ['http://seclists.org/fulldisclosure/', 'https://googleprojectzero.blogspot.it/', 'http://www.securityfocus.com/vulnerabilities', 'https://www.rapid7.com/db/modules', 'https://cxsecurity.com/exploit/', 'https://packetstormsecurity.com/files/tags/exploit/']
 
 def getpage(alist):
@@ -803,6 +823,33 @@ def realDict_f(function):
 			realDict[reverse_prettydate(date)] = el
 	return realDict
 
+
+def save_scraped(vulns):
+	past = db.session.query(vulns.name)
+	mypast = [el.name for el in past]
+	body = [str(mypast)[1:-1].replace('"', '')]
+	real_past = []
+	for el in body:
+		if el:
+			real_past.append(str(el[0]))
+
+	i = 0
+	for dictionary in allDict:
+		for key, value in dictionary.items():
+			names = value[0]
+			scores = value[1]
+			for vname, vscore in zip(names, scores):
+				if (vname in real_past) == False:
+					ascore = str(scoring(cve(vscore), vname))
+					if not ascore.startswith('Low'):
+						temp = allSource[i]
+						vuln_object = vulns(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
+						exists = db.session.query(vulns).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
+						if exists == False:
+							db.session.add(vuln_object)
+		i += 1
+
+	db.session.commit()
 
 #print(realDict_f(projectZero)) #---------------------------
 #allDict = [realDict_f(fulldisclosure), realDict_f(securityfocus), realDict_f(rapid7), realDict_f(packetstorm)] #realDict_f(projectZero), realDict_f(cxsecurity)

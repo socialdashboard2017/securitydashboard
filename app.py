@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 from models import *
 from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
-
+from spider import save_scraped
 # db.drop_all()
 from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist
 db.create_all()
@@ -94,7 +94,7 @@ def fetch_and_save_tweets(profile_name):
 @ssl_required
 @login_required
 def show_all():
-	return render_template('show_dashboard.html')
+	return render_template('show_dashboard.html', vulns=db.session.query(vulns).limit(5).all())
 
 
 
@@ -103,39 +103,7 @@ def show_all():
 @ssl_required
 @login_required
 def show_blogsforum():
-
-	check_on_all_tables()
-	past = db.session.query(vulns.name)
-
-	mypast = [el.name for el in past]
-
-
-	body = [str(mypast)[1:-1].replace('"', '')]
-
-	
-	real_past = []
-	for el in body:
-		if el:
-			real_past.append(str(el[0]))
-
-	i = 0
-	for dictionary in allDict:
-		for key, value in dictionary.items():
-			names = value[0]
-			scores = value[1]
-			for vname, vscore in zip(names, scores):
-				if (vname in real_past) == False:
-					ascore = str(scoring(cve(vscore), vname))
-					if not ascore.startswith('Low'):
-						temp = allSource[i]
-						vuln_object = vulns(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
-						exists = db.session.query(vulns).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
-						if exists == False:
-							db.session.add(vuln_object)
-		i += 1
-
-	db.session.commit()
-
+	save_scraped(vulns)
 	return render_template('show_blogsforum.html', vulns=db.session.query(vulns).all() )
 
 
