@@ -18,7 +18,7 @@ def timed_job():
 @sched.scheduled_job('interval', minutes=30)
 def timed_fetch_data():
 	#fetch_and_save_tweets()
-	saved_scraped()
+	save_scraped()
 
 
 sched.start()
