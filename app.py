@@ -11,7 +11,8 @@ app.config.from_object('config.BaseConfig')
 
 db = SQLAlchemy(app)
 
-from models import *
+#from models import *
+from models import * 
 from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
 from spider import save_scraped
@@ -46,7 +47,7 @@ import datetime
 
 now = datetime.datetime.now()
 
-
+from dashboard import *
 
 def check_on_all_tables():
 	total_tables_length = len(db.session.query(vulns).all()) + len(db.session.query(Tweets).all())
@@ -55,46 +56,16 @@ def check_on_all_tables():
 	#	db.session.query(vulns).delete()
 	#	db.session.query(Tweets).delete()
 	#	print('Deleting all records since total table length is >= 9000')
-'''				
-def fetch_and_save_tweets(profile_name):
-	check_on_all_tables()
-	negativeDictionary = getNegativeTweets(profile_name, no_of_tweets=70)
-	print (negativeDictionary,"negativeDictionary")
-	profile = get_profile(profile_name)
-	if profile:
-		for key, value in negativeDictionary.items():
-			tweets = value[0]
-			scores = value[1]
-			urls = value[2]
 
-			for tweet, tweet_score, tweet_url in zip(tweets, scores, urls):
-				decoded_tweet = tweet.decode('utf-8')
-				tweet_cve = get_cve(decoded_tweet)
-				tweet_score = get_tweet_score(decoded_tweet, tweet_score)
-				exists = db.session.query(Tweets).filter_by(tweet=decoded_tweet).first() is not None
-				print (exists, "exists")
-				if exists == False:
-					formatted_tweet = {
-						'tweet': decoded_tweet ,
-						'score': tweet_score,
-						'url': tweet_url,
-						'date': key,
-						'cve': tweet_cve,
-						'profile_id': profile.id
-					}
-					current_tweet = Tweets(**formatted_tweet)
-					db.session.add(current_tweet)
-		
-		db.session.commit()
-'''
 
 #MAIN DASHBOARD
 @app.route('/')
 @ssl_required
 @login_required
 def show_all():
-	fetchallprofiles();
-	return render_template('show_dashboard.html', vulns=db.session.query(vulns).limit(5).all())
+	#print (fetchallvulns())
+	#return render_template('show_dashboard.html', vulns=db.session.query(vulns).limit(5).all())
+	return render_template('show_dashboard.html', vulns=fetchallvulns())
 
 
 

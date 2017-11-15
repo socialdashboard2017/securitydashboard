@@ -6,6 +6,8 @@ import requests
 import os
 import os.path
 
+from models_blogs import vulns_blogs
+
 from flask import Flask, request, flash, url_for, redirect, render_template, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
@@ -27,7 +29,7 @@ now = datetime.datetime.now()
 mylist = ['http://seclists.org/fulldisclosure/', 'https://googleprojectzero.blogspot.it/', 'http://www.securityfocus.com/vulnerabilities', 'https://www.rapid7.com/db/modules', 'https://cxsecurity.com/exploit/', 'https://packetstormsecurity.com/files/tags/exploit/']
 
 ##TEST
-
+'''
 class vulns(db.Model):
 	id = db.Column('vuln_id', db.Integer, primary_key=True)
 	name = db.Column(db.String(500))
@@ -43,7 +45,7 @@ class vulns(db.Model):
 		self.my_cve = my_cve
 		self.score = score
 		self.source = source
-
+'''
 ##FINE TEST
 
 
@@ -105,72 +107,8 @@ def packetstorm():
 		
 	return dates, vulnNames, vulnScores, length, x #dictionary and all vulnerabilities
 packetstorm = packetstorm()[0:5]
-# packetstorm = [pkstorm[0], [1], packetstorm()[2], packetstorm()[3], packetstorm()[4]]
 
 
-'''	
-def cxsecurity():
-  
-  #get dates of vulnerabilities
-
-	pageDates = bsObj[4].findAll(text = re.compile('2017')) #------------------------------
-	#print(pageDates)
-	
-	#get names of vulnerabilities
-  
-	pageNames = bsObj[4].findAll("a", {'href': lambda x: x and x.startswith('https://cxsecurity.com/issue/WLB-')})
-	#print(pageNames)
-	
-	
-	#pageScore = bsObj[0].findAll(text = re.compile('Med.')) ----------------------------------
-	#print(pageScore)
-	#('label-label danger', 'label label-warning', 'label label-success')
-  
-	dates = []
-	vulnNames = []
-	vulnScores = []
-	
-	###################### realDic = { 'Data': [ [Names], [score] ] }
-	
-	for date in pageDates:
-		dates.append(str((re.split ('', date[5:]))[0]))
-		if '' in dates:
-			dates.remove('')
-	#print(dates)
-	
-	
-	#print (listDate)
-	
-	#print (str(listDate))
-	
-	for vuln in pageNames:
-		vulnNames.append(vuln.get_text())
-	#print(vulnNames)
-	
-		
-	for score in pageNames: #------------------------------------------ in pageScore!!
-		vulnScores.append(score.get_text())	
-
-	
-	length = [ dates[i] == dates [i+1] for i in range(len(dates)-1) ]
-	
-	#print (length) ------------------------------------------------
-	
-	#bsObj[4].findNext() table.table.table-striped.table-hover tbody
-
-	x = []
-	for index,item in enumerate(length):
-		if item == False:
-			x.append(index)
-		
-	return dates, vulnNames, vulnScores, length, x #dictionary and all vulnerabilities
-	
-cxsecurity = [cxsecurity()[0], cxsecurity()[1], cxsecurity()[2], cxsecurity()[3], cxsecurity()[4]]
-
-	
-#cxsecurity()
-
-'''
 
 def rapid7():
   #get dates of vulnerabilities
@@ -206,34 +144,6 @@ def rapid7():
 	return dates, vulnNames, vulnScores, length, x #dictionary and all vulnerabilities
 rapid7 = rapid7()[0:5]
 # rapid7 = [rapid7()[0], rapid7()[1], rapid7()[2], rapid7()[3], rapid7()[4]]
-
-
-'''
-def get_link(string, source):
-	
-	name_link = []
-	
-	if 'href' in string:
-		
-		temp0 = string.split('>')[1]
-		temp0 = temp0.split('<')[0]
-		name_link.append(temp0)
-
-		temp = string.split('=')[1]
-		temp = temp.split('>')[0]
-		temp = temp[1:-1]
-		if source == 'rapid7':
-			name_link.append('www.rapid7.com' + temp)
-		
-		
-	else:
-
-		name_link.append(string)
-
-		name_link.append('')
-
-	return name_link
-'''
 
 
 def securityfocus():
@@ -295,48 +205,6 @@ def securityfocus():
 securityfocus = securityfocus()[0:5]
 # securityfocus = [securityfocus()[0], securityfocus()[1], securityfocus()[2], securityfocus()[3], securityfocus()[4]]
 
-
-'''
-def projectZero():
-  
-  #get dates of vulnerabilities
-
-	pageDates = bsObj[1].find("h2", {'class': 'date-header'})
-	#print (pageDates)
-
-	#get names of vulnerabilities
-  
-	pageNames = bsObj[1].find("a", {"href": lambda x: x and x.startswith('https://googleprojectzero.blogspot.it/20')})
-  #print (allName)
-  
-	dates = []
-	vulnNames = []
-	vulnScores = []
-	
-	###################### realDic = { 'Data': [ [Names], [score] ] }
-	
-	dates = [pageDates.get_text()[-12:-6]	]
-	
-	#print (listDate)
-	
-	#print (str(listDate))
-
-	
-	vulnNames = [pageNames] #.text instead of .get_text() heroku AttributeError: 'NoneType' object has no attribute 'findNext'
-
-	
-		
-	vulnScores = [pageNames]  #------------------------------------------ in pageScore!!
-
-	
-	length = [ dates[i] == dates [i+1] for i in range(len(dates)-1) ]
-
-	x = [] # because would be equal to [False, False, False, False, False]
-		
-	return dates, vulnNames, vulnScores, length, x #dictionary and all vulnerabilities
-	
-projectZero = [projectZero()[0], projectZero()[1], projectZero()[2], projectZero()[3], projectZero()[4]]
-'''
 
 
 
@@ -768,44 +636,6 @@ def noise(mylist, source):
 		
 	return no_noise
 
-'''
-def noise(mylist, source):
-	#print(mylist)
-	alist = []
-	no_noise = []
-	#get el with cve
-	for el in mylist:
-		#el.split(',')
-		name = str( get_link (el, source))
-		name = eval(name)
-		#name = name.split(',')
-		#name = name[0][2:-1]
-		# same length and startswith the same four twelve
-		alist.append(name[0])
-	
-	alist.sort(key=len, reverse=True)
-	#print(alist)
-	
-	length = [ (len(alist[i]) == len(alist [i+1])) and (alist[i][:4] == alist[i+1][:4]) for i in range(len(alist)-1) ]
-	#print(length)
-
-	x = []
-	for index,item in enumerate(length):
-		if item == False:
-			x.append(index)
-			
-	#print(x)
-	
-	for index in x:
-		no_noise.append(alist[index])
-
-	#print (x)
-	#print('X NOISE')
-		
-	return no_noise
-
-
-'''
 
 
 def noise_scores(mylist, x):
@@ -846,7 +676,7 @@ def realDict_f(function):
 
 
 def save_scraped():
-	past = db.session.query(vulns.name)
+	past = db.session.query(vulns_blogs.name)
 	mypast = [el.name for el in past]
 	body = [str(mypast)[1:-1].replace('"', '')]
 	real_past = []
@@ -864,18 +694,14 @@ def save_scraped():
 					ascore = str(scoring(cve(vscore), vname))
 					if not ascore.startswith('Low'):
 						temp = allSource[i]
-						vuln_object = vulns(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
-						exists = db.session.query(vulns).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
+						vuln_object = vulns_blogs(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
+						exists = db.session.query(vulns_blogs).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
 						if exists == False:
 							db.session.add(vuln_object)
 		i += 1
 
 	db.session.commit()
 
-#print(realDict_f(projectZero)) #---------------------------
-#allDict = [realDict_f(fulldisclosure), realDict_f(securityfocus), realDict_f(rapid7), realDict_f(packetstorm)] #realDict_f(projectZero), realDict_f(cxsecurity)
-#allSource = ['fulldisclosure', 'securityfocus', 'rapid7', 'packetstorm']	#'projectZero' 'cxsecurity',
 
 allDict = [realDict_f(fulldisclosure), realDict_f(rapid7), realDict_f(securityfocus), realDict_f(packetstorm)]
 allSource = ['fulldisclosure', 'rapid7', 'securityfocus', 'packetstorm']
-# allDict = {}

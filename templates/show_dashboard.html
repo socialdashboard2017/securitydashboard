@@ -141,13 +141,13 @@
                     {% if vuln.source == 'securityfocus' or vuln.source == 'fulldisclosure'  %}         
                         <td><a href=http://{{ mylist[1][9:-2] }}  target="_blank">{{ mylist[0][2:-1] }}</td>            
                         <td>{{ vuln.date }}</td>
-                        <td>{{ vuln.my_cve }}</td>
+                        <td>{{ vuln.cve }}</td>
                         <td>{{ vuln.score }}</td>
                         <td>{{ vuln.source }}</td>
                     {% else %}         
-                        <td><a href=https://{{ mylist[1][9:-2] }}  target="_blank">{{ mylist[0][2:-1] }}</td>            
+                        <td><a href=https://{{ vuln.name }}  target="_blank">{{ vuln.name }}</td>            
                         <td>{{ vuln.date }}</td>
-                        <td>{{ vuln.my_cve }}</td>
+                        <td>{{ vuln.cve }}</td>
                         <td>{{ vuln.score }}</td>
                         <td>{{ vuln.source }}</td>
                     {% endif %} 

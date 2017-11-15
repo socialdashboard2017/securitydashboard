@@ -35,6 +35,12 @@ class TwitterClient(object):
 				access_token = os.getenv('TWITTER_ACCESS_TOKEN')
 				access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
 
+				print ("consumer_key = " + str(os.getenv('TWITTER_CONSUMER_KEY')))
+				print ("consumer_secret = " + str(os.getenv('TWITTER_CONSUMER_SECRET')))
+				print ("access_token = " + str(os.getenv('TWITTER_ACCESS_TOKEN')))
+				print ("access_token_secret =" + str(os.getenv('TWITTER_ACCESS_TOKEN_SECRET')))
+
+
 				# attempt authentication
 				try:
 						# create OAuthHandler object
@@ -173,10 +179,10 @@ class TwitterClient(object):
 
 				try:
 						# call twitter api to fetch tweets
-						print ("Fetching tweets for " + screen_name)
 						#fetched_tweets = self.api.user_timeline(screen_name, count=count)
 						fetched_tweets = self.api.user_timeline(screen_name, 10)
 						# fetch tweets between startDate and endDate
+						print ("Fetching tweets for " + screen_name)
 						for tweet in fetched_tweets:
 								if tweet.created_at < endDate and tweet.created_at > startDate:
 										dateFilteredTweets.append(tweet)
@@ -280,7 +286,8 @@ def fetch_and_save_tweets(profile_name):
 						'url': tweet_url,
 						'date': key,
 						'cve': tweet_cve,
-						'profile_id': profile.id
+						'profile_id': profile.id,
+						'profile_name': profile.name
 					}
 					current_tweet = Tweets(**formatted_tweet)
 					db.session.add(current_tweet)

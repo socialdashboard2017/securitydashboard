@@ -14,4 +14,3 @@ class vulns(db.Model):
 		self.my_cve = my_cve
 		self.score = score
 		self.source = source
-		

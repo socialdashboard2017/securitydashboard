@@ -1,6 +1,6 @@
 from app import db
 
-class vulns(db.Model):
+class vulns_blogs(db.Model):
 	id = db.Column('vuln_id', db.Integer, primary_key=True)
 	name = db.Column(db.String(500))
 	date = db.Column(db.String(500))
@@ -14,4 +14,3 @@ class vulns(db.Model):
 		self.my_cve = my_cve
 		self.score = score
 		self.source = source
-		

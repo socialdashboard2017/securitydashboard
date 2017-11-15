@@ -2,6 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from app import show_all, fetch_and_save_tweets
 from mail import *
 from spider import save_scraped;
+from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist,fetchallprofiles,fetch_and_save_tweets, get_profile
 
 
 
@@ -18,6 +19,7 @@ def timed_job():
 @sched.scheduled_job('interval', minutes=30)
 def timed_fetch_data():
 	#fetch_and_save_tweets()
+	fetchallprofiles()
 	save_scraped()
 
 
