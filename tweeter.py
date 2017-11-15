@@ -1,5 +1,7 @@
+from __future__ import unicode_literals
 # # from nltk.corpus import stopwords
 import re
+import sys
 import string
 import tweepy
 import datetime
@@ -10,6 +12,8 @@ from textblob import TextBlob
 from dotenv import load_dotenv, find_dotenv
 from spider import *
 import urllib.request, json
+from models_profiles import profiles
+
 
 if not os.getenv('HEROKU'):
 		load_dotenv(find_dotenv())
@@ -158,7 +162,7 @@ class TwitterClient(object):
 				'''
 				Main function to fetch tweets and parse them.
 				'''
-
+				
 				tweets = []  # empty list to store parsed tweets
 				dateFilteredTweets = []  # empty list to store date wise filtered tweets
 				tagFilteredTweets = []  # empty list to store tag based  tweets
@@ -169,8 +173,9 @@ class TwitterClient(object):
 
 				try:
 						# call twitter api to fetch tweets
-						fetched_tweets = self.api.user_timeline(screen_name, count=count)
-
+						print ("Fetching tweets for " + screen_name)
+						#fetched_tweets = self.api.user_timeline(screen_name, count=count)
+						fetched_tweets = self.api.user_timeline(screen_name, 10)
 						# fetch tweets between startDate and endDate
 						for tweet in fetched_tweets:
 								if tweet.created_at < endDate and tweet.created_at > startDate:
@@ -237,24 +242,81 @@ class TwitterClient(object):
 
 				except tweepy.TweepError as e:
 						# print error (if any)
-						print("Error : " + str(e))
+						print("Error : " + str(e) + " " + str(sys.exc_info()[2]))
+						
+
+
+def get_profile(profile_name):
+	return db.session.query(profiles).filter_by(name=profile_name).first()
+
+
+def fetch_and_save_tweets(profile_name):
+	#check_on_all_tables()
+	
+	negativeDictionary = getNegativeTweets(profile_name, no_of_tweets=70)
+	#TEST
+	#egativeDictionary =  fetchtweets(profile_name)
+	#END TEST
+	
+	#print (negativeDictionary,"negativeDictionary")
+	profile = get_profile(profile_name)
+	#print (profile)
+	if profile:
+		for key, value in negativeDictionary.items():
+			tweets = value[0]
+			scores = value[1]
+			urls = value[2]
+
+			for tweet, tweet_score, tweet_url in zip(tweets, scores, urls):
+				decoded_tweet = tweet.decode('utf-8')
+				tweet_cve = get_cve(decoded_tweet)
+				tweet_score = get_tweet_score(decoded_tweet, tweet_score)
+				exists = db.session.query(Tweets).filter_by(tweet=decoded_tweet).first() is not None
+				print (exists, "exists")
+				if exists == False:
+					formatted_tweet = {
+						'tweet': decoded_tweet ,
+						'score': tweet_score,
+						'url': tweet_url,
+						'date': key,
+						'cve': tweet_cve,
+						'profile_id': profile.id
+					}
+					current_tweet = Tweets(**formatted_tweet)
+					db.session.add(current_tweet)
+		
+		db.session.commit()
+
+
+
+
+
+
+
+# # Fetching tweets from all profiles
+
+def fetchallprofiles():
+	saved_profiles = db.session.query(profiles).all()
+	for profile in saved_profiles:
+		fetch_and_save_tweets(profile.name)
+
+
+
 
 # # creating object of TwitterClient Class
 api = TwitterClient()
 
 #def fetchtweets(profile_name):
 def fetchtweets(profile_name='Inj3ct0r'):	        
-	        #print ("we are in fetchtweets")
-		# # print(api, len(api))
-		# # print(api.created_at)
+		'''
 		# # creating and initializing output xlsx file containg all formatted tweets and stored in current directory.
 		workbook = xlsxwriter.Workbook(
 				os.path.dirname(os.path.realpath(inspect.getfile(inspect.currentframe()))) + '/trail.xlsx')
 		worksheet = workbook.add_worksheet()
 		# creating bold formatted text for xlsx cell
 		bold = workbook.add_format({'bold': True})
+		'''
 
-		# workbook.close()
 		# # array of TAGs used to filter tweets
 		query = ["#cybersecurity", "cybersecurity", "#infosec", "infosec", "#security", "security", "#cybercrime",
 						"cybercrime", "#cyberwar", "cyberwar", "#0dayexploits", "0dayexploits", "#0daytoday", "0daytoday",
@@ -273,49 +335,15 @@ def fetchtweets(profile_name='Inj3ct0r'):
 		tweets = api.get_tweets(profile_name, query, count=70) or []
 		tweets = api.set_negative_sentiment_score(critical_keyword, high_keyword, tweets)
 
-		# # picking positive tweets from tweets
-		# ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive']
 
 
-		# #######changing heree
-		# # a = {}
-		# # a = ["authenticate","inject","vodafone","remote","xss cross site scripting","encryption","cypher crypto","input validation","traversal session permission","privileges","resource","hard-coded","improper information leakage","leak ssrf"]
-		# # for key, value in a.iteritems():
-		# # 		print(key)
 
-		# percentage of positive tweets
-		#print("Positive tweets percentage: {} %".format(100 * len(ptweets) / len(tweets)))
-		# picking negative tweets from tweets
 		ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
-		# percentage of negative tweets
-		#print("Negative tweets percentage: {} %".format(100 * len(ntweets) / len(tweets)))
-		# picking Neutral tweets from tweets
-		# netweets = [tweet for tweet in tweets if tweet['sentiment'] == 'neutral']
-		# percentage of neutral tweets
-		#print("Neutral tweets percentage: {} % ".format(100 * len(netweets) / len(tweets)))
-
+	
+		'''
 		row = 0
 
-		# #     print(api.tweetObj)
-		# worksheet.write(row, 0, str(api.tweetObj))
-		# row += 1
-		# worksheet.write(row, 0, "Positive tweets", bold)
-		# row += 1
-		# worksheet.write(row, 0, "created_at", bold)
-		# worksheet.write(row, 1, "sentiment", bold)
-		# worksheet.write(row, 2, "score", bold)
-		# worksheet.write(row, 3, "url", bold)
-		# worksheet.write(row, 4, "tweet", bold)
-		# row += 1
-
-		# for tweet in ptweets:
-		#     date = tweet['gvndate'].strftime('%b %m %Y')
-		#     worksheet.write(row, 0, date)
-		#     worksheet.write(row, 1, tweet['sentiment'])
-		#     worksheet.write(row, 2, tweet['score'])
-		#     worksheet.write(row, 3, tweet['url'])
-		#     worksheet.write(row, 4, tweet['text'])
-		#     row += 1
+	
 
 		row += 1
 		worksheet.write(row, 0, "Negative tweets:", bold)
@@ -335,36 +363,8 @@ def fetchtweets(profile_name='Inj3ct0r'):
 				worksheet.write(row, 3, tweet['url'])
 				worksheet.write(row, 4, tweet['text'])
 				row += 1
-
-		# row += 1
-		# worksheet.write(row, 0, "Neutral tweets:", bold)
-		# row += 1
-		# worksheet.write(row, 0, "created_at", bold)
-		# worksheet.write(row, 1, "sentiment", bold)
-		# worksheet.write(row, 2, "score", bold)
-		# worksheet.write(row, 3, "url", bold)
-		# worksheet.write(row, 4, "tweet", bold)
-		# row += 1
-
-		# for tweet in netweets:
-		#     date = tweet['gvndate'].strftime('%b %m %Y')
-		#     worksheet.write(row, 0, date)
-		#     worksheet.write(row, 1, tweet['sentiment'])
-		#     worksheet.write(row, 2, tweet['score'])
-		#     worksheet.write(row, 3, tweet['url'])
-		#     worksheet.write(row, 4, tweet['text'])
-		#     row += 1
-
-		# print("\n\nPositive tweets:")
-		# for tweet in ptweets[:1]:
-		#     positiveDictionary = {}
-
-		#     print(tweet['gvndate'].strftime('%b %m %Y'))
-		#     print(tweet['text'].encode('utf-8'))
-		#     print("Sentiment Score ------- ", tweet['score'])
-		#     given_date = tweet['gvndate'].strftime('%b %m %Y')
-		#     tweet_text = tweet['text'].encode('utf-8')
-		#     positiveDictionary[given_date] = [tweet_text, tweet['score']]
+		'''
+	
 		return {
 			'ntweets': ntweets
 		}
@@ -377,13 +377,11 @@ def get_cve(tweet):
 		return cve_tweet
 
 def getNegativeTweets(profile_name, no_of_tweets):
+		
 		ntweets = fetchtweets(profile_name)['ntweets'][:no_of_tweets]
 		
 		negativeDictionary = {}
 		for index, tweet in enumerate(ntweets):
-				#print(tweet['gvndate'].strftime('%b %m %Y'))
-				#print(tweet['text'].encode('utf-8'))
-				#print("Sentiment Score ------- ", tweet['score'])
 				given_date = tweet['gvndate'].strftime('%b %m %Y')
 				tweet_text = tweet['text'].encode('utf-8')
 				if index > 0:
@@ -398,19 +396,6 @@ def getNegativeTweets(profile_name, no_of_tweets):
 						negativeDictionary[given_date] = [tweet_text_array, tweet_score_array, tweet_url_array]
 		return negativeDictionary
 						
-# printing first 5 negative tweets
-# print("\n\nNegative tweets:")
-# print(getNegativeTweets(5))
-
-#print("\n\nNeutral tweets:")
-#for tweet in netweets:
-		# neutralDictionary = {}
- #   print(tweet['gvndate'].strftime('%b %m %Y'))
-	#  print(tweet['text'].encode('utf-8'))
-		# print("Sentiment Score ------- ",tweet['score'])
-		# given_date = tweet['gvndate'].strftime('%b %m %Y')
-		# tweet_text = tweet['text'].encode('utf-8')
-		# neutralDictionary[given_date] = [tweet_text, tweet['score']]
 
 # print(negativeDictionary)
 def get_cvss_rating(cve_score):

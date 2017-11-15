@@ -1,5 +1,5 @@
+from __future__ import unicode_literals
 import random
-
 from flask import Flask, request, flash, url_for, redirect, render_template, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
@@ -16,7 +16,7 @@ from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
 from spider import save_scraped
 # db.drop_all()
-from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist
+from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist,fetchallprofiles,fetch_and_save_tweets, get_profile
 db.create_all()
 
 def ssl_required(fn):
@@ -46,8 +46,7 @@ import datetime
 
 now = datetime.datetime.now()
 
-def get_profile(profile_name):
-	return db.session.query(profiles).filter_by(name=profile_name).first()
+
 
 def check_on_all_tables():
 	total_tables_length = len(db.session.query(vulns).all()) + len(db.session.query(Tweets).all())
@@ -56,7 +55,7 @@ def check_on_all_tables():
 	#	db.session.query(vulns).delete()
 	#	db.session.query(Tweets).delete()
 	#	print('Deleting all records since total table length is >= 9000')
-				
+'''				
 def fetch_and_save_tweets(profile_name):
 	check_on_all_tables()
 	negativeDictionary = getNegativeTweets(profile_name, no_of_tweets=70)
@@ -87,13 +86,14 @@ def fetch_and_save_tweets(profile_name):
 					db.session.add(current_tweet)
 		
 		db.session.commit()
-
+'''
 
 #MAIN DASHBOARD
 @app.route('/')
 @ssl_required
 @login_required
 def show_all():
+	fetchallprofiles();
 	return render_template('show_dashboard.html', vulns=db.session.query(vulns).limit(5).all())
 
 
