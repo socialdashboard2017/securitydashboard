@@ -1,10 +1,9 @@
-from __future__ import unicode_literals
 import random
 from flask import Flask, request, flash, url_for, redirect, render_template, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from sqlalchemy import exists
-
+import telegrambot
 app = Flask(__name__)
 
 app.config.from_object('config.BaseConfig')
@@ -56,6 +55,23 @@ def check_on_all_tables():
 	#	db.session.query(vulns).delete()
 	#	db.session.query(Tweets).delete()
 	#	print('Deleting all records since total table length is >= 9000')
+
+
+#DEBUG JOBS
+#MAIN
+@app.route('/debugjob/<action>')
+def show_debugjob(action=""):
+	output = "Done"
+	if action=="twitter":
+		output = fetchallprofiles()
+	if action=="telegram":
+		secbot = BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
+		output += secbot.check_new_subscriptors()
+		output += secbot.push_update("TEST1234")
+		
+
+	return action + "=" + output;
+	
 
 
 #MAIN DASHBOARD

@@ -13,7 +13,8 @@ class tweets(db.Model):
   def __init__(self, tweet, date, cve, score, url, profile_id):
     self.tweet = tweet
     self.date = date
-    self.cve = self.update_cve(cve)
+    #self.cve = self.update_cve(cve) (?????)
+    self.cve = cve
     self.score = score
     self.url = url
     self.profile_id = profile_id

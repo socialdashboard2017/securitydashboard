@@ -45,5 +45,5 @@ class BotHandler:
                     print (chatid)
                     file.write (chatid+"\n") # append missing data
 
-secbot = BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-secbot.check_new_subscriptors()
+#secbot = BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
+#secbot.check_new_subscriptors()

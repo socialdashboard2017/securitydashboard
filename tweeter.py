@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 # # from nltk.corpus import stopwords
 import re
 import sys
@@ -8,6 +7,7 @@ import datetime
 import xlsxwriter
 import inspect, os
 from tweepy import OAuthHandler
+from models_tweet import tweets as Tweets
 from textblob import TextBlob
 from dotenv import load_dotenv, find_dotenv
 from spider import *
@@ -168,7 +168,7 @@ class TwitterClient(object):
 				'''
 				Main function to fetch tweets and parse them.
 				'''
-				
+				#print (self.api.rate_limit_status())
 				tweets = []  # empty list to store parsed tweets
 				dateFilteredTweets = []  # empty list to store date wise filtered tweets
 				tagFilteredTweets = []  # empty list to store tag based  tweets
@@ -180,13 +180,15 @@ class TwitterClient(object):
 				try:
 						# call twitter api to fetch tweets
 						#fetched_tweets = self.api.user_timeline(screen_name, count=count)
-						fetched_tweets = self.api.user_timeline(screen_name, 10)
+						#fetched_tweets = self.api.user_timeline(screen_name, 10)
+						fetched_tweets = self.api.user_timeline(screen_name = screen_name,count=5)
 						# fetch tweets between startDate and endDate
 						print ("Fetching tweets for " + screen_name)
 						for tweet in fetched_tweets:
-								if tweet.created_at < endDate and tweet.created_at > startDate:
+								if tweet.created_at > startDate:
+								#if tweet.created_at < endDate and tweet.created_at > startDate:
 										dateFilteredTweets.append(tweet)
-
+						'''
 						# fetch more tweets if all retrieved tweets are earlier than endDate limit
 						while (fetched_tweets[-1].created_at > startDate):
 								print("Last Tweet @", fetched_tweets[-1].created_at, " - fetching some more")
@@ -199,16 +201,9 @@ class TwitterClient(object):
                 # Break out of loop once tweets reaches or exceed expected number
 								if len(dateFilteredTweets) >= count:
 									break;
-
+						'''
 						# Get all tweets from dateFilteredTweets based on the given tags in query list and store in tagFilteredTweets list
 						for tweet in dateFilteredTweets:
-
-								# i = 0
-								# if 'CVE-' in str(tweet):
-								#     if i == 0:
-								#         self.tweetObj = tweet
-								#         i += 1
-
 								for i in range(len(query)):
 										tag = query[i]
 
@@ -224,10 +219,6 @@ class TwitterClient(object):
 								# empty dictionary to store required params of a tweet
 								parsed_tweet = {}
 
-								# i = 0
-								# if i == 0:
-								#     print("keys :" + str(tweet))
-								#     i += 1
 
 								# saving text of tweet
 								parsed_tweet['text'] = tweet.text
@@ -260,9 +251,7 @@ def fetch_and_save_tweets(profile_name):
 	#check_on_all_tables()
 	
 	negativeDictionary = getNegativeTweets(profile_name, no_of_tweets=70)
-	#TEST
-	#egativeDictionary =  fetchtweets(profile_name)
-	#END TEST
+
 	
 	#print (negativeDictionary,"negativeDictionary")
 	profile = get_profile(profile_name)
@@ -286,8 +275,7 @@ def fetch_and_save_tweets(profile_name):
 						'url': tweet_url,
 						'date': key,
 						'cve': tweet_cve,
-						'profile_id': profile.id,
-						'profile_name': profile.name
+						'profile_id': profile.id
 					}
 					current_tweet = Tweets(**formatted_tweet)
 					db.session.add(current_tweet)
@@ -306,7 +294,7 @@ def fetchallprofiles():
 	saved_profiles = db.session.query(profiles).all()
 	for profile in saved_profiles:
 		fetch_and_save_tweets(profile.name)
-
+	return "done"
 
 
 
@@ -347,31 +335,7 @@ def fetchtweets(profile_name='Inj3ct0r'):
 
 		ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
 	
-		'''
-		row = 0
 
-	
-
-		row += 1
-		worksheet.write(row, 0, "Negative tweets:", bold)
-		row += 1
-		worksheet.write(row, 0, "created_at", bold)
-		worksheet.write(row, 1, "sentiment", bold)
-		worksheet.write(row, 2, "score", bold)
-		worksheet.write(row, 3, "url", bold)
-		worksheet.write(row, 4, "tweet", bold)
-		row += 1
-
-		for tweet in ntweets:
-				date = tweet['gvndate'].strftime('%b %m %Y')
-				worksheet.write(row, 0, date)
-				worksheet.write(row, 1, tweet['sentiment'])
-				worksheet.write(row, 2, tweet['score'])
-				worksheet.write(row, 3, tweet['url'])
-				worksheet.write(row, 4, tweet['text'])
-				row += 1
-		'''
-	
 		return {
 			'ntweets': ntweets
 		}
