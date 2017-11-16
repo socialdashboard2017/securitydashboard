@@ -65,7 +65,7 @@ def show_debugjob(action=""):
 	if action=="twitter":
 		output = fetchallprofiles()
 	if action=="telegram":
-		secbot = BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
+		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 		output += secbot.check_new_subscriptors()
 		output += secbot.push_update("TEST1234")
 		
