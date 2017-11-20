@@ -68,10 +68,19 @@ def show_debugjob(action=""):
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 		secbot.check_new_subscriptors()
 		secbot.push_update("TEST1234")
-		
-
 	return action + "=" + output;
 	
+#API Layer
+@app.route('/API/<key>/<action>')
+def manage_apis(action="", key=""):
+	if key != "EaSKhyGzXU": return "Invalid key!"
+	output = "Done"
+	if action=="twitter":
+		output = fetchallprofiles()
+	if action=="telegram-webhook":
+		output="telegram done"
+	return action + "=" + output;
+
 
 
 #MAIN DASHBOARD
