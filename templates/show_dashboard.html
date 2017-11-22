@@ -26,7 +26,7 @@
                     <tr>
               
                     <td><a href={{ vuln.name[1]}}  target="_blank">{{vuln.name[0] }}</td>            
-                    <td>{{ vuln.date }}</td>
+                    <td>{{ vuln.date.strftime('%d, %b %Y') }}</td>
                     <td>{{ vuln.cve }}</td>
                     <td>{{ vuln.score }}</td>
                     <td>{{ vuln.source }}</td>

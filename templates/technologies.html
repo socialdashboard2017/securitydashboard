@@ -22,19 +22,17 @@
           
           <div class="login-box">
               <div class="login-box-body">
-                <p class="login-box-msg">Add New Profile</p>
-                {% if profile_name_invalid %}
-                  <p>Invalid twitter username</p>
-                {% endif %}
-                <form action="/profiles" method="POST">
+                <p class="login-box-msg">Add New Technology</p>
+
+                <form action="/technologies" method="POST">
                   <div class="form-group has-feedback">
-                    <input type="text" class="form-control" placeholder="Profile Name" name="profile_name" value="" required>
+                    <input type="text" class="form-control" placeholder="Technology Name" name="technology_name" value="" required>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                   </div>
                  
                   <div class="row">
-                    <div class="col-xs-4">
-                      <input type="submit" class="btn btn-primary btn-block btn-flat" value="Save Profile">
+                    <div class="col-xs-6">
+                      <input type="submit" class="btn btn-primary btn-block btn-flat" value="Save Technology">
                     </div>
                   </div>
                 </form>
@@ -52,20 +50,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for profile in profiles %}
+                    {% for technology in technologies %}
                     <tr>
-                        <td><a class="pointer" href="/tweets/{{profile.name}}"> {{ profile.name }} </a>
-                          <div id="myDiv_{{profile.id}}" style="display:none;" class="answer_list" >
-                            <input type="input" name="answer" id="profid_{{profile.id}}" value="{{profile.name}}"/>
-                            <input id="clickMe" type="button" value="Update" onclick="editProfile({{ profile.id }}, '{{ profile.name }}');" />
+                        <td> {{ technology.name }}
+                          <div id="myDiv_{{technology.id}}" style="display:none;" class="answer_list" >
+                            <input type="input" name="answer" id="techid_{{technology.id}}" value="{{technology.name}}"/>
+                            <input id="clickMe" type="button" value="Update" onclick="editTechnology({{ technology.id }}, '{{ technology.name }}');" />
                           </div>
                           
                       </td>
                       
                         <td>
                             <a class="pointer" title="Edit profile" onclick="showDiv(
-                            'myDiv_{{profile.id}}');"><span class="glyphicon glyphicon-pencil"></span></a> &emsp;
-                            <a class="pointer" title="Delete profile" onclick="deleteProfile({{ profile.id }})"><span class="glyphicon glyphicon-trash"></span></a>
+                            'myDiv_{{technology.id}}');"><span class="glyphicon glyphicon-pencil"></span></a> &emsp;
+                            <a class="pointer" title="Delete profile" onclick="deleteTechnology({{ technology.id }})"><span class="glyphicon glyphicon-trash"></span></a>
                         </td>
                     </tr>
                     {% endfor %} 
@@ -75,10 +73,10 @@
       </div><!-- /.content-wrapper -->
       
         <script type="text/javascript">
-      function deleteProfile(profileId) {
-        if (confirm('Are you sure you want to delete this profile?')) {
+      function deleteTechnologies(profileId) {
+        if (confirm('Are you sure you want to delete this technology?')) {
           $.ajax({
-            url: '/profiles/' + profileId ,
+            url: '/technologies/' + profileId ,
             type: 'DELETE',
             success: function(result) {
                 location.reload()
@@ -87,16 +85,16 @@
         }
       }
     
-      function editProfile(profileId, profileName) {
+      function editTechnology(technologyId, technologyName) {
         
-        var profilename = document.getElementById("profid_"+profileId).value;
+        var technologyname = document.getElementById("techid_"+technologyId).value;
         
-        if (profilename) {
+        if (technologyname) {
           $.ajax({
-            url: '/profiles/' + profileId ,
+            url: '/technologies/' + technologyId ,
             type: 'PUT',
             data: {
-              profile_name: profilename
+              technology_name: technologyname
             },
             success: function(result) {
                 location.reload()

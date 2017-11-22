@@ -15,6 +15,7 @@ from models import *
 from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
 from spider import save_scraped
+from technologies import *
 # db.drop_all()
 from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist,fetchallprofiles,fetch_and_save_tweets, get_profile
 db.create_all()
@@ -68,6 +69,11 @@ def show_debugjob(action=""):
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 		secbot.check_new_subscriptors()
 		secbot.push_update("TEST1234")
+	if action=="technologies-show":
+		output=show_technologies()
+	if action=="technologies-import":
+		output="done"
+		import_technologies()
 	return action + "=" + output;
 	
 #API Layer
@@ -78,7 +84,8 @@ def manage_apis(action="", key=""):
 	if action=="twitter":
 		output = fetchallprofiles()
 	if action=="telegram-webhook":
-		output="telegram done"
+		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
+		output = secbot.registerHook()
 	return action + "=" + output;
 
 
@@ -173,15 +180,69 @@ def show_profiles():
 
 
 
+#Technology LIST	
+@app.route('/technologies', methods=['GET', 'POST'])
+@ssl_required
+@login_required
+def show_technologies():
+	if request.method == 'GET':
+		saved_technologies = db.session.query(technologies).all()
+		#profile_name_invalid = session["profile_name_invalid"] if "profile_name_invalid" in session else False
+		return render_template('technologies.html', technologies=saved_technologies)
+	
+	if request.method == 'POST':
+		request_data = request.data or request.form
+		technology_name = request_data.get('technology_name')
+		technology = technologies(name=technology_name)
+		db.session.add(technology)
+		db.session.commit()
+		return redirect(url_for('show_technologies'))
+#SHOW SINGLE TECHNOLOGY
+@app.route('/technologies/<int:technology_id>', methods=['PUT', 'DELETE'])
+def manage_technology(technology_id):
+	if request.method == 'DELETE':
+		technology = db.session.query(technologies).filter_by(id=technology_id).first()
+		if technology:
+			db.session.delete(technology)
+			db.session.commit()
+			return jsonify({ 'message': 'Technology deleted successfully'}), 204
+		
+		return jsonify({ 'message': 'Technology deletion was not successful'}), 400
+		
+	if request.method == 'PUT':
+		request_data = request.data or request.form
+		technology_name = request_data.get('technology_name')
+		print (technology_name)
+		if technology_name:
+			technology = db.session.query(technologies).filter_by(id=technology_id).first()
+			if technology and technology.name != technology_name:
+				technology.name = technology_name
+				db.session.commit()
+			return jsonify({ 'message': 'Technology updated successfully'}), 200
+		return jsonify({ 'message': 'Technology update was not successful'}), 400
+
+
+
+
+
 #SOCIAL DASHBOARD
 @app.route('/socials', methods=['GET', 'POST'])
 @ssl_required
 @login_required
 def show_socials():
 	if request.method == 'GET':
-		saved_profiles = db.session.query(profiles).all()
-		profile_name_invalid = session["profile_name_invalid"] if "profile_name_invalid" in session else False
-		return render_template('show_socials.html', profiles=saved_profiles, profile_name_invalid=profile_name_invalid)
+		twitter_vulns = db.session.query(tweets).order_by(desc(tweets.id)).limit(5).all()
+		all_vulns = []
+		for tvuln in twitter_vulns:
+			profile_array = db.session.query(profiles).filter_by(id=tvuln.profile_id).all()
+			profile_name = profile_array[0].name
+			final_name = []
+			final_name.append(tvuln.tweet)
+			final_name.append(tvuln.url)
+			single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
+			all_vulns.append(single_vuln)
+		#profile_name_invalid = session["profile_name_invalid"] if "profile_name_invalid" in session else False
+		return render_template('show_socials.html', vulns=all_vulns)
 
 
 #KEYWORDS EDITING
