@@ -82,10 +82,12 @@ def manage_apis(action="", key=""):
 	output = "Done"
 	if action=="twitter":
 		output = fetchallprofiles()
-	if action=="telegram-webhook":
+	if action=="telegram-hook":
+		request_data = request.data or request.form
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-		output = secbot.catchHook(request)
-	return action + "=" + output;
+		output = secbot.catchHook(request_data)
+		#return "OK", 200
+	return output, 200
 
 
 

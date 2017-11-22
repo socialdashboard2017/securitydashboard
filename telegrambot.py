@@ -1,5 +1,6 @@
 import requests
 import datetime
+import json
 
 class BotHandler:
 
@@ -46,12 +47,17 @@ class BotHandler:
                     file.write (chatid+"\n") # append missing data
                     
     def catchHook(self,post):
-        #print (post.get_js)
-        update = post.get_json(force=True)
-        #self.send_message(line,message)
-        print (str(update))
-        #bot.sendMessage(chat_id=update.message.chat_id, text='Hello, there')
-    
+        jsonResponse = json.loads(post.decode('utf-8'))
+        message = jsonResponse['message']['text']
+        chatid = jsonResponse['message']['chat']['id']
+        print (str(chatid) + ":" + message)
+
+        if (message == "/start"):
+            self.send_message(chatid,"Hello! I'm SecurityDashboardBot! Please to meet you!")
+        if (message == "/help"):
+            self.send_message(chatid,"/last: returns last 5 vulnerabilities\n/lastblog: returns last 5 vulnerabilities from blogs/forum\n/lastsocial: returns last 5 vulnerabilities from socialnetworks\n")
+        
+        return "done"
     def registerHook(self):
         WEBHOOK_URL = 'https://securitydash.herokuapp.com/API/EaSKhyGzXU/telegram-hook'
         result_json = ""
