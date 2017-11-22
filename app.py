@@ -67,8 +67,7 @@ def show_debugjob(action=""):
 		output = fetchallprofiles()
 	if action=="telegram":
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-		secbot.check_new_subscriptors()
-		secbot.push_update("TEST1234")
+		output = secbot.registerHook()
 	if action=="technologies-show":
 		output=show_technologies()
 	if action=="technologies-import":
@@ -84,8 +83,7 @@ def manage_apis(action="", key=""):
 	if action=="twitter":
 		output = fetchallprofiles()
 	if action=="telegram-webhook":
-		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-		output = secbot.registerHook()
+		output = "done"
 	return action + "=" + output;
 
 
