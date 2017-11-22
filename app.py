@@ -76,14 +76,15 @@ def show_debugjob(action=""):
 	return action + "=" + output;
 	
 #API Layer
-@app.route('/API/<key>/<action>')
+@app.route('/API/<key>/<action>', methods=['GET', 'POST'])
 def manage_apis(action="", key=""):
 	if key != "EaSKhyGzXU": return "Invalid key!"
 	output = "Done"
 	if action=="twitter":
 		output = fetchallprofiles()
 	if action=="telegram-webhook":
-		output = "done"
+		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
+		output = secbot.catchHook(request.form)
 	return action + "=" + output;
 
 

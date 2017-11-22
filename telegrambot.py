@@ -44,6 +44,10 @@ class BotHandler:
                 else: # not found, we are at the eof
                     print (chatid)
                     file.write (chatid+"\n") # append missing data
+                    
+    def catchHook(self,post):
+        print (post)
+    
     def registerHook(self):
         WEBHOOK_URL = 'https://securitydash.herokuapp.com/API/EaSKhyGzXU/telegram-hook'
         result_json = ""
