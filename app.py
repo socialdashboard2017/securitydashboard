@@ -84,7 +84,7 @@ def manage_apis(action="", key=""):
 		output = fetchallprofiles()
 	if action=="telegram-webhook":
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-		output = secbot.catchHook(request.form)
+		output = secbot.catchHook(request)
 	return action + "=" + output;
 
 
