@@ -49,7 +49,7 @@ class BotHandler:
         params = {'url': WEBHOOK_URL}
         method = 'setWebhook'
         resp = requests.post(self.api_url + method, params)
-        return resp
+        return str(resp)
        
 #secbot = BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 #secbot.check_new_subscriptors()
