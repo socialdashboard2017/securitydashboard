@@ -45,7 +45,7 @@ class BotHandler:
                     print (chatid)
                     file.write (chatid+"\n") # append missing data
     def registerHook(self):
-        WEBHOOK_URL = 'https://securitydash.herokuapp.com/API/telegram-hook'
+        WEBHOOK_URL = 'https://securitydash.herokuapp.com/API/EaSKhyGzXU/telegram-hook'
         params = {'url': WEBHOOK_URL}
         method = 'setWebhook'
         resp = requests.post(self.api_url + method, params)
