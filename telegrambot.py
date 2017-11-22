@@ -55,7 +55,14 @@ class BotHandler:
         if (message == "/start"):
             self.send_message(chatid,"Hello! I'm SecurityDashboardBot! Please to meet you!")
         if (message == "/help"):
-            self.send_message(chatid,"/last: returns last 5 vulnerabilities\n/lastblog: returns last 5 vulnerabilities from blogs/forum\n/lastsocial: returns last 5 vulnerabilities from socialnetworks\n")
+            self.send_message(chatid,"*** HELP ***\n/last: returns last 5 vulnerabilities\n/lastblog: returns last 5 vulnerabilities from blogs/forum\n/lastsocial: returns last 5 vulnerabilities from socialnetworks\n")
+        if (message == "/last"):
+            self.send_message(chatid,"*** Last vulnerabilities ***\nWork in progress!\nYabba dabba fuffa fuffa!\n")
+        if (message == "/lastblog"):
+            self.send_message(chatid,"*** Last vulnerabilities from sites ***\nWork in progress!\nYabba dabba fuffa fuffa!\n")
+        if (message == "/lastsocial"):
+            self.send_message(chatid,"*** Last vulnerabilities from socialnetworks***\nWork in progress!\nYabba dabba fuffa fuffa!\n")
+
         
         return "done"
     def registerHook(self):
