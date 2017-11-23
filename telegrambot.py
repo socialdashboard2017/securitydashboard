@@ -2,6 +2,18 @@ import requests
 import datetime
 import json
 import dashboard
+from app import db
+from models_blogs import vulns_blogs
+from models_tweet import tweets
+from models_profiles import profiles, keyword_tags
+from spider import save_scraped
+from sqlalchemy import desc
+import ast
+from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist,fetchallprofiles,fetch_and_save_tweets, get_profile
+from dateutil.parser import parse
+
+
+
 class BotHandler:
 
     def __init__(self, token):
