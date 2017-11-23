@@ -47,7 +47,7 @@ class BotHandler:
                     print (chatid)
                     file.write (chatid+"\n") # append missing data
                     
-    def catchHook(self,post):
+    def catchHook(self,post,db):
         jsonResponse = json.loads(post.decode('utf-8'))
         message = jsonResponse['message']['text']
         chatid = jsonResponse['message']['chat']['id']
@@ -62,7 +62,7 @@ class BotHandler:
         if (message == "/lastblog"):
             self.send_message(chatid,"*** Last vulnerabilities from sites ***\n")
             from dashboard import fetchBlogVulns
-            vulns=fetchBlogVulns(5)
+            vulns=fetchBlogVulns(db,5)
             for vuln in vulns:
                 message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") <a href='" +  vuln['name'][1] + "'>View</a>"
         if (message == "/lastsocial"):

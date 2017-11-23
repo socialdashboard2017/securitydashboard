@@ -95,7 +95,7 @@ def manage_apis(action="", key=""):
 	if action=="telegram-hook":
 		request_data = request.data or request.form
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-		output = secbot.catchHook(request_data)
+		output = secbot.catchHook(request_data,db)
 	return output, 200
 
 
