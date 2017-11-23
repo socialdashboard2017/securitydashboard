@@ -1,7 +1,7 @@
 import requests
 import datetime
 import json
-from dashboard import fetchBlogVulns, fetchSocialVulns
+#from dashboard import fetchBlogVulns, fetchSocialVulns
 
 class BotHandler:
 
@@ -61,7 +61,8 @@ class BotHandler:
             self.send_message(chatid,"*** Last vulnerabilities ***\nWork in progress!\nYabba dabba fuffa fuffa!\n")
         if (message == "/lastblog"):
             self.send_message(chatid,"*** Last vulnerabilities from sites ***\n")
-            vulns=dashboard.fetchBlogVulns(5)
+            from dashboard import fetchBlogVulns
+            vulns=fetchBlogVulns(5)
             for vuln in vulns:
                 message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") <a href='" +  vuln['name'][1] + "'>View</a>"
         if (message == "/lastsocial"):

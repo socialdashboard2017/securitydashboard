@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from sqlalchemy import exists
 import telegrambot
+
 import dashboard
 app = Flask(__name__)
 
