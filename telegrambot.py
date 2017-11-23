@@ -58,10 +58,9 @@ class BotHandler:
         if (message == "/help"):
             self.send_message(chatid,"*** HELP ***\n/last: returns last 5 vulnerabilities\n/lastblog: returns last 5 vulnerabilities from blogs/forum\n/lastsocial: returns last 5 vulnerabilities from socialnetworks\n")
         if (message == "/last"):
-            self.send_message(chatid,"*** Last vulnerabilities ***\nWork in progress!\nYabba dabba fuffa fuffa!\n")
             from dashboard import fetchallvulns
             vulns=fetchallvulns(db)
-            del vulns[100:]
+            del vulns[5:]
             for vuln in vulns:
                 message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") " +  vuln['name'][1]
                 self.send_message(chatid,message)
