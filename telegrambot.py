@@ -15,8 +15,8 @@ class BotHandler:
         result_json = resp.json()['result']
         return result_json
 
-    def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text}
+    def send_message(self, chat_id, text, disable_preview="false"):
+        params = {'chat_id': chat_id, 'text': text, 'disable_web_page_preview' : disable_preview }
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
@@ -47,6 +47,11 @@ class BotHandler:
                     print (chatid)
                     file.write (chatid+"\n") # append missing data
                     
+    def formatMessage(self, vuln):
+        message = "Date: " + vuln['date'].strftime('%d, %b %Y') + "\nCVE: " + vuln['cve'] + "\nScore: " +  vuln['score'] + "\nDescription: " + vuln['name'][0] + "\nLink: " + vuln['name'][1]  
+        return message
+        
+        
     def catchHook(self,post,db):
         jsonResponse = json.loads(post.decode('utf-8'))
         message = jsonResponse['message']['text']
@@ -62,22 +67,19 @@ class BotHandler:
             vulns=fetchallvulns(db)
             del vulns[5:]
             for vuln in vulns:
-                message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") " +  vuln['name'][1]
-                self.send_message(chatid,message)
+                self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/lastblog"):
             self.send_message(chatid,"*** Last vulnerabilities from sites ***\n")
             from dashboard import fetchBlogVulns
             vulns=fetchBlogVulns(db,5)
             for vuln in vulns:
-                message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") " +  vuln['name'][1]
-                self.send_message(chatid,message)
+                self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/lastsocial"):
             self.send_message(chatid,"*** Last vulnerabilities from socialnetworks***\n")
             from dashboard import fetchSocialVulns
             vulns=fetchSocialVulns(db,5)
             for vuln in vulns:
-                message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") " +  vuln['name'][1]
-                self.send_message(chatid,message)
+                self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
 
         
         return "done"
