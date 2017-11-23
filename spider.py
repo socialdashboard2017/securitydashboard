@@ -513,67 +513,49 @@ def get_cvss(cve_vuln):
 def cvss_scoring(cvss):
 	cvss = str(cvss)
 
-	#vuln_score = 'aaaaaaaa'
-	
-	#print (str(cvss) + ' CVSS IN')
 	if cvss in ["%.1f" % round((x / float(10)), 1) for x in range(0, 40, 1)]:
-		vuln_score = 'Low' + ' (' + cvss + ')'
+		vuln_score = 1 #'Low' + ' (' + cvss + ')'
 
 	elif cvss in ["%.1f" % round((x / float(10)), 1) for x in range(40, 70, 1)]:
-		vuln_score = 'Medium' + ' (' + cvss + ')'
+		vuln_score = 4 #'Medium' + ' (' + cvss + ')'
 			
 	elif cvss in ["%.1f" % round((x / float(10)), 1) for x in range(70, 90, 1)]:
-		vuln_score = 'High' + ' (' + cvss + ')'
+		vuln_score = 7 #'High' + ' (' + cvss + ')'
 
 	elif cvss in ["%.1f" % round((x / float(10)), 1) for x in range(90, 100, 1)]:
-		vuln_score = 'Critical' + ' (' + cvss + ')'
+		vuln_score = 10 #'Critical' + ' (' + cvss + ')'
 			
 	return vuln_score
 
 def none_cvss_scoring(name):
 	
-	#print (str(name).lower())
-	#print ('NAME.LOWER')
 	name = (str(name)).lower()
-	#print(name)
 	
 	if any(el in name for el in ['rce','authenticat', 'remote', 'injection', 'vodafone']):
-		vuln_score = 'Critical'
+		vuln_score = 10 #'Critical'
 		#print (vuln_score)
 			
 	elif any(el in name for el in ['xss','cross site scripting','cross-site scripting','encryption','cypher','crypto','input validation','traversal','session','permission','privileges','resource','ddos', 'denial of service','url redirection','hard-coded','hard coded']):
-		vuln_score = 'High'
+		vuln_score = 7 #'High'
 		#print(vuln_score)
 
 	elif any(el in name for el in ['csrf','improper','leak','ssrf']):
-		vuln_score = 'Medium'
+		vuln_score = 4 #'Medium'
 			
 	else:
-		vuln_score = 'Low'
-	
-	#print (vuln_score)
+		vuln_score = 1 #'Low'
+		
 	return vuln_score
 
 
 def scoring (cve_vuln, name):
-	#print (str(name))
-	#print(name)
-	#print ('NAME')
 	cvss = get_cvss(cve_vuln)
-	#print (str(cvss) + ' CVSS OUT')
-	#vuln_score = ' '
 	if str(cvss) != 'Awaiting Analysis' and cvss != None:
-		
 		vuln_score = cvss_scoring(cvss)
-
-
 	else:
 		vuln_score = none_cvss_scoring(name)
-		#print( str(vuln_score) + 'ddadadad')
-	
-		if cvss == 'Awaiting Analysis':
-			vuln_score = vuln_score + ' (' + str(cvss) + ')'
-			
+	#	if cvss == 'Awaiting Analysis':
+	#		vuln_score = vuln_score + ' (' + str(cvss) + ')'
 	return (vuln_score)
 
 
