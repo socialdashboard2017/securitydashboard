@@ -5,19 +5,21 @@ from functools import wraps
 from sqlalchemy import exists
 import telegrambot
 
-import dashboard
+
 app = Flask(__name__)
 
 app.config.from_object('config.BaseConfig')
 
 db = SQLAlchemy(app)
 
-#from models import *
 from models import * 
 from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
 from spider import save_scraped
 from technologies import *
+
+import dashboard
+
 # db.drop_all()
 from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist,fetchallprofiles,fetch_and_save_tweets, get_profile
 db.create_all()
@@ -105,7 +107,7 @@ def manage_apis(action="", key=""):
 def show_all():
 	#print (fetchallvulns())
 	#return render_template('show_dashboard.html', vulns=db.session.query(vulns).limit(5).all())
-	return render_template('show_dashboard.html', vulns=fetchallvulns())
+	return render_template('show_dashboard.html', vulns=fetchallvulns(db))
 
 
 
