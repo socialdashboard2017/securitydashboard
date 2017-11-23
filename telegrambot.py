@@ -54,7 +54,7 @@ class BotHandler:
         print (str(chatid) + ":" + message)
 
         if (message == "/start"):
-            self.send_message(chatid,"Hello! I'm SecurityDashboardBot! Please to meet you!")
+            self.send_message(chatid,"Hello! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
         if (message == "/help"):
             self.send_message(chatid,"*** HELP ***\n/last: returns last 5 vulnerabilities\n/lastblog: returns last 5 vulnerabilities from blogs/forum\n/lastsocial: returns last 5 vulnerabilities from socialnetworks\n")
         if (message == "/last"):
