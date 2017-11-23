@@ -64,7 +64,7 @@ class BotHandler:
             from dashboard import fetchBlogVulns
             vulns=fetchBlogVulns(db,5)
             for vuln in vulns:
-                message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") <a href='" +  vuln['name'][1] + "'>View</a>"
+                message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ")" +  vuln['name'][1]
                 self.send_message(chatid,message)
         if (message == "/lastsocial"):
             self.send_message(chatid,"*** Last vulnerabilities from socialnetworks***\nWork in progress!\nYabba dabba fuffa fuffa!\n")
