@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from sqlalchemy import exists
 import telegrambot
+import dashboard
 app = Flask(__name__)
 
 app.config.from_object('config.BaseConfig')
@@ -70,6 +71,12 @@ def show_debugjob(action=""):
 		output = secbot.registerHook()
 	if action=="technologies-show":
 		output=show_technologies()
+	if action=="test-bot-vulns":
+		vulns=dashboard.fetchBlogVulns(5)
+		for vuln in vulns:
+			#print (vuln['url'])
+			message = "(" + vuln['date'].strftime('%d, %b %Y') + ") " + vuln['name'][0] + " - " + vuln['cve'] + " (Score:" + vuln['score'] +  ") <a href='" +  vuln['name'][1] + "'>View</a>"
+			print (message) 
 	if action=="technologies-import":
 		output="done"
 		import_technologies()
@@ -86,7 +93,6 @@ def manage_apis(action="", key=""):
 		request_data = request.data or request.form
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 		output = secbot.catchHook(request_data)
-		#return "OK", 200
 	return output, 200
 
 
