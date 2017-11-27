@@ -8,6 +8,7 @@ from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score
 from sqlalchemy import desc
 import ast
 from dateutil.parser import parse
+import datetime
 
 
 
@@ -53,8 +54,13 @@ def fetchallvulns(db):
         final_name = []
         final_name.append(tvuln.tweet)
         final_name.append(tvuln.url)
-        #single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
-        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': tvuln.date,'cve': tvuln.cve,'source': "@" + profile_name}
+        try:
+            d = parse(tvuln.date)
+        except ValueError:
+            d = datetime.datetime.now()
+        
+        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': d,'cve': tvuln.cve,'source': "@" + profile_name}
+        #single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': tvuln.date,'cve': tvuln.cve,'source': "@" + profile_name}
         all_vulns.append(single_vuln)
     for tvuln in blogs_vulns:
         single_vuln = {'name': ast.literal_eval(tvuln.name) ,'score': tvuln.score,'url': tvuln.source,'date': parse(tvuln.date),'cve': tvuln.my_cve,'source': tvuln.source}
