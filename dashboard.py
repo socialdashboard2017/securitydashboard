@@ -21,6 +21,10 @@ def fetchSocialVulns(db, count=5):
         final_name = []
         final_name.append(tvuln.tweet)
         final_name.append(tvuln.url)
+        
+        #TODO
+        # - needs to be implemented a TryParse for vulnerability date
+        
         single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
         all_vulns.append(single_vuln)
     all_vulns = sorted(all_vulns, key=lambda x: x['date'], reverse=True)
@@ -49,7 +53,8 @@ def fetchallvulns(db):
         final_name = []
         final_name.append(tvuln.tweet)
         final_name.append(tvuln.url)
-        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
+        #single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
+        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': tvuln.date,'cve': tvuln.cve,'source': "@" + profile_name}
         all_vulns.append(single_vuln)
     for tvuln in blogs_vulns:
         single_vuln = {'name': ast.literal_eval(tvuln.name) ,'score': tvuln.score,'url': tvuln.source,'date': parse(tvuln.date),'cve': tvuln.my_cve,'source': tvuln.source}
