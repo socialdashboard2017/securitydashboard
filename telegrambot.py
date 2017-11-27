@@ -69,19 +69,18 @@ class BotHandler:
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/lastblog"):
-            self.send_message(chatid,"*** Last vulnerabilities from sites ***\n")
+            self.send_message(chatid,"*** Last vulnerabilities from Forums and Blogs ***\n")
             from dashboard import fetchBlogVulns
             vulns=fetchBlogVulns(db,5)
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/lastsocial"):
-            self.send_message(chatid,"*** Last vulnerabilities from socialnetworks***\n")
+            self.send_message(chatid,"*** Last vulnerabilities from SocialNetworks***\n")
             from dashboard import fetchSocialVulns
             vulns=fetchSocialVulns(db,5)
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
 
-        
         return "done"
     def registerHook(self):
         WEBHOOK_URL = 'https://securitydash.herokuapp.com/API/EaSKhyGzXU/telegram-hook'
@@ -90,7 +89,7 @@ class BotHandler:
         method = "deleteWebhook"
         resp = requests.post(self.api_url + method)
         result_json = result_json + resp.json()['description'] + " "
-        
+        #set webhook
         method = 'setWebhook'
         params = {'url': WEBHOOK_URL}
         resp = requests.post(self.api_url + method, params)
@@ -98,5 +97,3 @@ class BotHandler:
         
         return result_json
        
-#secbot = BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
-#secbot.check_new_subscriptors()

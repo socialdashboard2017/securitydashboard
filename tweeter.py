@@ -178,35 +178,20 @@ class TwitterClient(object):
 				endDate = datetime.datetime(2017, 7, 16, 0, 0, 0)
 
 				try:
-						# call twitter api to fetch tweets
-						#fetched_tweets = self.api.user_timeline(screen_name, count=count)
-						#fetched_tweets = self.api.user_timeline(screen_name, 10)
 						fetched_tweets = self.api.user_timeline(screen_name = screen_name,count=5)
-						# fetch tweets between startDate and endDate
+
 						print ("Fetching tweets for " + screen_name)
 						for tweet in fetched_tweets:
+								#print (tweet)
 								if tweet.created_at > startDate:
-								#if tweet.created_at < endDate and tweet.created_at > startDate:
-										dateFilteredTweets.append(tweet)
-						'''
-						# fetch more tweets if all retrieved tweets are earlier than endDate limit
-						while (fetched_tweets[-1].created_at > startDate):
-								print("Last Tweet @", fetched_tweets[-1].created_at, " - fetching some more")
-								fetched_tweets = self.api.user_timeline(screen_name, max_id=fetched_tweets[-1].id)
-								no_of_date_filtered_tweets = len(dateFilteredTweets)
-								for tweet in fetched_tweets:
-										if tweet.created_at < endDate and tweet.created_at > startDate and no_of_date_filtered_tweets < count:
-												dateFilteredTweets.append(tweet)
+									#if tweet.created_at < endDate and tweet.created_at > startDate:
+									dateFilteredTweets.append(tweet)
 
-                # Break out of loop once tweets reaches or exceed expected number
-								if len(dateFilteredTweets) >= count:
-									break;
-						'''
 						# Get all tweets from dateFilteredTweets based on the given tags in query list and store in tagFilteredTweets list
 						for tweet in dateFilteredTweets:
+								#print (tweet.text)
 								for i in range(len(query)):
 										tag = query[i]
-
 										tweetText = tweet.text.split()
 										noOfTags = tweetText.count(tag)
 
@@ -230,7 +215,7 @@ class TwitterClient(object):
 								parsed_tweet['gvndate'] = tweet.created_at
 								# saving URL key of tweet
 								parsed_tweet['url'] = "https://twitter.com/statuses/"+tweet.id_str
-
+								#print (parsed_tweet)
 								tweets.append(parsed_tweet)
 								# for url in tagFilteredTweets["entities"]["urls"]:
 								#   print " - found URL: %s" % url["expanded_url"]
@@ -245,6 +230,36 @@ class TwitterClient(object):
 
 def get_profile(profile_name):
 	return db.session.query(profiles).filter_by(name=profile_name).first()
+
+def fetch_and_save_tweets_new(profile_name, no_of_tweets=10):
+	ntweets = fetchtweets(profile_name)
+	profile = get_profile(profile_name)
+	#print ("---" + profile_name + ":" + repr(ntweets))
+	if profile:
+		for value in ntweets['ntweets']:
+			decoded_tweet = value['text']
+			tweet_cve = get_cve(decoded_tweet)
+			tweet_score = api.get_sentiment_score(decoded_tweet)
+			search_tweet = db.session.query(Tweets).filter_by(tweet = decoded_tweet).first()
+			exists = search_tweet is not None
+			if exists == True:
+				exists = search_tweet.score == tweet_score
+			print (exists, "exists:" + decoded_tweet) 
+			exists = False
+			if exists == False:
+				formatted_tweet = {
+					'tweet': decoded_tweet ,
+					'score': tweet_score,
+					'url': value['url'],
+					'date': "",
+					'cve': tweet_cve,
+					'profile_id': profile.id
+				}
+				print (repr(formatted_tweet))
+				current_tweet = Tweets(**formatted_tweet)
+				db.session.add(current_tweet)
+
+		db.session.commit()
 
 
 def fetch_and_save_tweets(profile_name):
@@ -293,7 +308,7 @@ def fetch_and_save_tweets(profile_name):
 def fetchallprofiles():
 	saved_profiles = db.session.query(profiles).all()
 	for profile in saved_profiles:
-		fetch_and_save_tweets(profile.name)
+		fetch_and_save_tweets_new(profile.name)
 	return "done"
 
 
@@ -303,18 +318,10 @@ api = TwitterClient()
 
 #def fetchtweets(profile_name):
 def fetchtweets(profile_name='Inj3ct0r'):	        
-		'''
-		# # creating and initializing output xlsx file containg all formatted tweets and stored in current directory.
-		workbook = xlsxwriter.Workbook(
-				os.path.dirname(os.path.realpath(inspect.getfile(inspect.currentframe()))) + '/trail.xlsx')
-		worksheet = workbook.add_worksheet()
-		# creating bold formatted text for xlsx cell
-		bold = workbook.add_format({'bold': True})
-		'''
 
 		# # array of TAGs used to filter tweets
 		query = ["#cybersecurity", "cybersecurity", "#infosec", "infosec", "#security", "security", "#cybercrime",
-						"cybercrime", "#cyberwar", "cyberwar", "#0dayexploits", "0dayexploits", "#0daytoday", "0daytoday",
+						"cybercrime", "#cyberwar", "cyberwar", "#0dayexploits", "0day", "0dayexploits", "#0daytoday", "0daytoday",
 						"#vulnerability", "vulnerability", "#struts", "struts", "#struts2", "struts2", "#wordpress", "wordpress", "#Apache", "Apache"]
 
 		# # array of critical words for negative score (-0.2)
@@ -328,16 +335,13 @@ def fetchtweets(profile_name='Inj3ct0r'):
 
 		# # calling function to get tweets
 		tweets = api.get_tweets(profile_name, query, count=70) or []
-		tweets = api.set_negative_sentiment_score(critical_keyword, high_keyword, tweets)
-
-
-
+		#print (tweets)
+		#tweets = api.set_negative_sentiment_score(critical_keyword, high_keyword, tweets)
 
 		ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
-	
 
 		return {
-			'ntweets': ntweets
+			'ntweets': tweets #ntweets
 		}
 
 def get_cve(tweet): 
@@ -406,13 +410,15 @@ def get_tweet_score(text, score):
 						
 						tweet_cve_score = tweet_cve_score.replace('\r', '').replace('\n', '').replace(' ', '')
 				
-				tweet_score = '{} [{}]'.format(tweet_cve_score,  get_cvss_rating(tweet_cve_score))
+				#tweet_score = '{} [{}]'.format(tweet_cve_score,  get_cvss_rating(tweet_cve_score))
+				tweet_score = '{}'.format(tweet_cve_score)
 		
 		else:
-				if float(score) >= -0.05:
-						tweet_score = str(score) + " [critical] "
-				elif float(score) <= -0.05 or float(score) >= -0.1:
-						tweet_score = str(score) + " [high] "
+				tweet_score = str(score)
+#				if float(score) >= -0.05:
+#						tweet_score = str(score) + " [critical] "
+#				elif float(score) <= -0.05 or float(score) >= -0.1:
+#						tweet_score = str(score) + " [high] "
 
 		return tweet_score.replace('SS', '')
 

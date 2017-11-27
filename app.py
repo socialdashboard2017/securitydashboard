@@ -67,8 +67,11 @@ def check_on_all_tables():
 @app.route('/debugjob/<action>')
 def show_debugjob(action=""):
 	output = "Done"
-	if action=="twitter":
+	if action=="social":
 		output = fetchallprofiles()
+	if action=="blogs":
+		save_scraped()	
+		output = "done"
 	if action=="telegram":
 		secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 		output = secbot.registerHook()
