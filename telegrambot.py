@@ -74,12 +74,12 @@ class BotHandler:
             vulns=fetchBlogVulns(db,5)
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
-        if (message == "/lastsocial"):
-            self.send_message(chatid,"*** Last vulnerabilities from SocialNetworks***\n")
-            from dashboard import fetchSocialVulns
-            vulns=fetchSocialVulns(db,5)
-            for vuln in vulns:
-                self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
+        #if (message == "/lastsocial"):
+            #self.send_message(chatid,"*** Last vulnerabilities from SocialNetworks***\n")
+            #from dashboard import fetchSocialVulns
+            #vulns=fetchSocialVulns(db,5)
+            #for vuln in vulns:
+            #    self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
 
         return "done"
     def registerHook(self):
