@@ -3,8 +3,7 @@ import urllib.request
 import re
 import lxml
 import requests
-import os
-import os.path
+
 
 from models_blogs import vulns_blogs
 
@@ -12,6 +11,9 @@ from flask import Flask, request, flash, url_for, redirect, render_template, ses
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from sqlalchemy import exists
+import scoring_functions
+
+
 
 app = Flask(__name__)
 
@@ -480,7 +482,7 @@ def cve(name):
   
   return (cve_vuln)
 
-
+'''
 def get_cvss(cve_vuln):
 	
 	if cve_vuln != '':
@@ -557,7 +559,7 @@ def scoring (cve_vuln, name):
 	#	if cvss == 'Awaiting Analysis':
 	#		vuln_score = vuln_score + ' (' + str(cvss) + ')'
 	return (vuln_score)
-
+'''
 
 
 def is_ascii(s):
@@ -667,13 +669,14 @@ def save_scraped():
 			real_past.append(str(el[0]))
 
 	i = 0
+	print (repr(real_past))
 	for dictionary in allDict:
 		for key, value in dictionary.items():
 			names = value[0]
 			scores = value[1]
 			for vname, vscore in zip(names, scores):
 				if (vname in real_past) == False:
-					ascore = str(scoring(cve(vscore), vname))
+					ascore = str(scoring_functions.scoring(cve(vscore), vname))
 					if not ascore.startswith('Low'):
 						temp = allSource[i]
 						vuln_object = vulns_blogs(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)

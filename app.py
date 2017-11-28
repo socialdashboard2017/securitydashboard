@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from sqlalchemy import exists
 import telegrambot
-
+import scoring_functions
 
 app = Flask(__name__)
 
@@ -45,7 +45,7 @@ def login_required(f):
 			return render_template('login.html')
 	return wrap
 
-from spider import allDict, allSource, cve, scoring, get_link
+from spider import allDict, allSource, cve, get_link
 
 import datetime
 
@@ -120,7 +120,13 @@ def show_all():
 @login_required
 def show_blogsforum():
 	#save_scraped()
-	return render_template('show_blogsforum.html', vulns=db.session.query(vulns).all() )
+	blogs_vulns = db.session.query(vulns_blogs).order_by(desc(vulns_blogs.id)).limit(100).all()
+	all_vulns = []
+	for tvuln in blogs_vulns:
+		single_vuln = {'name': ast.literal_eval(tvuln.name) ,'score': tvuln.score,'url': tvuln.source,'date': parse(tvuln.date),'cve': tvuln.my_cve,'source': tvuln.source}
+		all_vulns.append(single_vuln)
+	all_vulns = sorted(all_vulns, key=lambda x: x['date'], reverse=True)
+	return render_template('show_blogsforum.html', vulns=all_vulns )
 
 
 #LOGIN FORM

@@ -14,6 +14,7 @@ from spider import *
 import urllib.request, json
 from models_profiles import profiles
 
+import scoring_functions
 
 if not os.getenv('HEROKU'):
 		load_dotenv(find_dotenv())
@@ -239,7 +240,8 @@ def fetch_and_save_tweets_new(profile_name, no_of_tweets=10):
 		for value in ntweets['ntweets']:
 			decoded_tweet = value['text']
 			tweet_cve = get_cve(decoded_tweet)
-			tweet_score = api.get_sentiment_score(decoded_tweet)
+			#tweet_score = api.get_sentiment_score(decoded_tweet)
+			tweet_score = scoring_functions.scoring(tweet_cve, decoded_tweet)
 			search_tweet = db.session.query(Tweets).filter_by(tweet = decoded_tweet).first()
 			exists = search_tweet is not None
 			if exists == True:
