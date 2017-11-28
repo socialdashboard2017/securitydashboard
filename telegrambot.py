@@ -94,6 +94,7 @@ class BotHandler:
         if (message == "/subscribe"):
             subs_object = subscriptors(name = "Uhmmm", chat_id = chatid, push = True)
             db.session.add(subs_object)
+            db.session.commit()
             self.send_message(chatid,"You are subscribed!")           
         if (message == "/unsubscribe"):
             self.send_message(chatid,"You are unsubscribed!")            
