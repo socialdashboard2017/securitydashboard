@@ -62,11 +62,13 @@ class BotHandler:
             self.send_message(chatid,"Hello! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
         if (message == "/help"):
             self.send_message(chatid,""" 
-            *** HELP ***
-            /last: returns last 5 vulnerabilities
-            /lastblog: returns last 5 vulnerabilities from blogs/forum
-            /lastsocial: returns last 5 vulnerabilities from socialnetworks
-            ************
+*** HELP ***
+/last: returns last 5 vulnerabilities
+/lastblog: returns last 5 vulnerabilities from blogs/forum
+/lastsocial: returns last 5 vulnerabilities from socialnetworks
+/subscribe: register your ID in order to receive push notification in case of critical vulnerability
+/unsubscribe: remove your subscription
+************
             """)
         if (message == "/last"):
             from dashboard import fetchallvulns
@@ -86,7 +88,10 @@ class BotHandler:
             vulns=fetchSocialVulns(db,5)
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
-
+        if (message == "/subscribe"):
+            self.send_message(chatid,"You are subscribed!")            
+        if (message == "/unsubscribe"):
+            self.send_message(chatid,"You are unsubscribed!")            
         return "done"
     def registerHook(self):
         WEBHOOK_URL = 'https://securitydash.herokuapp.com/API/EaSKhyGzXU/telegram-hook'
