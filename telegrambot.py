@@ -1,6 +1,9 @@
 import requests
 import datetime
 import json
+
+from models import subscriptors
+
 #from dashboard import fetchBlogVulns, fetchSocialVulns
 
 class BotHandler:
@@ -89,7 +92,9 @@ class BotHandler:
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/subscribe"):
-            self.send_message(chatid,"You are subscribed!")            
+            subs_object = subscriptors(name = "Uhmmm", chat_id = chatid, push = True)
+            db.session.add(subs_object)
+            self.send_message(chatid,"You are subscribed!")           
         if (message == "/unsubscribe"):
             self.send_message(chatid,"You are unsubscribed!")            
         return "done"

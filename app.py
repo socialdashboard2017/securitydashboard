@@ -13,6 +13,7 @@ app.config.from_object('config.BaseConfig')
 db = SQLAlchemy(app)
 
 from models import * 
+#from models_subscriptors import subscriptors
 from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
 from spider import save_scraped
@@ -174,6 +175,14 @@ def show_all_tweets(profile_name=''):
 	else:
 		saved_tweets = []
 	return render_template('show_all_tweets.html', tweets=saved_tweets, profile=profile, profiles=saved_profiles)
+
+#BOT Subscription LIST	
+@app.route('/subscribers', methods=['GET', 'POST'])
+@ssl_required
+@login_required
+def show_subscribers():
+	return render_template('show_subscriptors.html', subscriptors=db.session.query(subscriptors).all() )	
+
 
 
 #PROFILES LIST	

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% include 'header.html' %}
+{% include 'sidebar.html' %}
+
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+
+        <!-- Main content -->
+        <section class="content">
+            <table id="example" class="display" cellspacing='0' width='100%'>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Push</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subscriptor in subscriptors %}
+                    <tr>
+                    <td>{{ subscriptor.name }}</td>            
+                    <td>{{ subscriptor.push }}</td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
+          
+          
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+      
+      
+{% include 'footer.html' %} 

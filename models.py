@@ -14,4 +14,14 @@ class vulns(db.Model):
 		self.my_cve = my_cve
 		self.score = score
 		self.source = source
-		
+
+class subscriptors(db.Model):
+	id = db.Column('subscription_id', db.Integer, primary_key=True)
+	name = db.Column(db.String(500))
+	chat_id = db.Column(db.String(500))
+	push = db.Column(db.Boolean)
+	
+	def __init__(self, name, chat_id, push):
+		self.name = name
+		self.chat_id = chat_id
+		self.push = push
