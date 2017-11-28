@@ -1,4 +1,4 @@
-from app import db
+from dbclass import db
 from models_profiles import profiles
 
 class tweets(db.Model):

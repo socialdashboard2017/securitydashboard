@@ -1,4 +1,4 @@
-from app import db
+from dbclass import db
 
 class profiles(db.Model):
 	id = db.Column('profiles_id', db.Integer, primary_key=True)

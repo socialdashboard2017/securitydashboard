@@ -1,4 +1,4 @@
-from app import db
+from dbclass import db
 
 class vulns_blogs(db.Model):
 	id = db.Column('vuln_id', db.Integer, primary_key=True)

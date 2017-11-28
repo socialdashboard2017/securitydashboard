@@ -12,8 +12,8 @@ app.config.from_object('config.BaseConfig')
 
 db = SQLAlchemy(app)
 
-from models import * 
-#from models_subscriptors import subscriptors
+from models import vulns, subscriptors
+
 from models_tweet import tweets as Tweets
 from models_profiles import profiles, keyword_tags
 from spider import save_scraped
