@@ -244,7 +244,7 @@ def manage_technology(technology_id):
 @login_required
 def show_socials():
 	if request.method == 'GET':
-		twitter_vulns = db.session.query(tweets).order_by(desc(tweets.id)).limit(5).all()
+		twitter_vulns = db.session.query(tweets).order_by(desc(tweets.id)).limit(100).all()
 		all_vulns = []
 		for tvuln in twitter_vulns:
 			profile_array = db.session.query(profiles).filter_by(id=tvuln.profile_id).all()
@@ -252,7 +252,12 @@ def show_socials():
 			final_name = []
 			final_name.append(tvuln.tweet)
 			final_name.append(tvuln.url)
-			single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
+			
+			try:
+				d = parse(tvuln.date)
+			except ValueError:
+				d = datetime.datetime.now()
+			single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': d,'cve': tvuln.cve,'source': "@" + profile_name}
 			all_vulns.append(single_vuln)
 		#profile_name_invalid = session["profile_name_invalid"] if "profile_name_invalid" in session else False
 		return render_template('show_socials.html', vulns=all_vulns)
