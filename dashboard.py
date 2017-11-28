@@ -25,8 +25,12 @@ def fetchSocialVulns(db, count=5):
         
         #TODO
         # - needs to be implemented a TryParse for vulnerability date
-        
-        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': parse(tvuln.date),'cve': tvuln.cve,'source': "@" + profile_name}
+        try:
+            d = parse(tvuln.date)
+        except ValueError:
+            d = datetime.datetime.now()
+            
+        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': d,'cve': tvuln.cve,'source': "@" + profile_name}
         all_vulns.append(single_vuln)
     all_vulns = sorted(all_vulns, key=lambda x: x['date'], reverse=True)
     return all_vulns
@@ -36,7 +40,12 @@ def fetchBlogVulns(db, count=5):
     blogs_vulns = db.session.query(vulns_blogs).order_by(desc(vulns_blogs.id)).limit(count).all()
     all_vulns = []
     for tvuln in blogs_vulns:
-        single_vuln = {'name': ast.literal_eval(tvuln.name) ,'score': tvuln.score,'url': tvuln.source,'date': parse(tvuln.date),'cve': tvuln.my_cve,'source': tvuln.source}
+        try:
+            d = parse(tvuln.date)
+        except ValueError:
+            d = datetime.datetime.now()
+            
+        single_vuln = {'name': ast.literal_eval(tvuln.name) ,'score': tvuln.score,'url': tvuln.source,'date': d,'cve': tvuln.my_cve,'source': tvuln.source}
         all_vulns.append(single_vuln)
     all_vulns = sorted(all_vulns, key=lambda x: x['date'], reverse=True)
     return all_vulns
