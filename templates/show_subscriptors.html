@@ -11,6 +11,7 @@
             <table id="example" class="display" cellspacing='0' width='100%'>
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Push</th>
                     </tr>
@@ -18,6 +19,7 @@
                 <tbody>
                     {% for subscriptor in subscriptors %}
                     <tr>
+                    <td>{{ subscriptor.chat_id }}</td>            
                     <td>{{ subscriptor.name }}</td>            
                     <td>{{ subscriptor.push }}</td>
                     </tr>
