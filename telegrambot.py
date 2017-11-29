@@ -59,11 +59,21 @@ class BotHandler:
         jsonResponse = json.loads(post.decode('utf-8'))
         message = jsonResponse['message']['text']
         chatid = jsonResponse['message']['chat']['id']
-        name = jsonResponse['message']['chat']['first_name']
+        name = jsonResponse['message']['chat']['first_name'] + " " + jsonResponse['message']['chat']['last_name']
         print (str(chatid) + ":" + message)
 
         if (message == "/start"):
-            self.send_message(chatid,"Hello! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
+            subscriber = db.session.query(subscriptors).filter_by(chat_id=str(chatid)).first()
+            if subscriber:
+                db.session.delete(subscriber)
+                db.session.commit()
+            subs_object = subscriptors(name = name, chat_id = chatid, push = False)
+            exists = db.session.query(subscriptors).filter_by(chat_id = str(chatid)).first() is not None
+            if exists == False:
+                db.session.add(subs_object)
+                db.session.commit()
+            
+            self.send_message(chatid,"Hello, " + name +  "! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
         if (message == "/help"):
             self.send_message(chatid,""" 
 *** HELP ***
@@ -93,6 +103,10 @@ class BotHandler:
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/subscribe"):
+            subscriber = db.session.query(subscriptors).filter_by(chat_id=str(chatid)).first()
+            if subscriber:
+                db.session.delete(subscriber)
+                db.session.commit()
             subs_object = subscriptors(name = name, chat_id = chatid, push = True)
             exists = db.session.query(subscriptors).filter_by(chat_id = str(chatid)).first() is not None
             if exists == False:
