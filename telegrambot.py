@@ -93,7 +93,7 @@ class BotHandler:
             for vuln in vulns:
                 self.send_message(chatid,self.formatMessage(vuln),disable_preview="true")
         if (message == "/subscribe"):
-            subs_object = subscriptors(name = "Uhmmm", chat_id = chatid, push = True)
+            subs_object = subscriptors(name = name, chat_id = chatid, push = True)
             exists = db.session.query(subscriptors).filter_by(chat_id = str(chatid)).first() is not None
             if exists == False:
                 db.session.add(subs_object)
