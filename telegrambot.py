@@ -59,6 +59,7 @@ class BotHandler:
         jsonResponse = json.loads(post.decode('utf-8'))
         message = jsonResponse['message']['text']
         chatid = jsonResponse['message']['chat']['id']
+        name = jsonResponse['message']['chat']['first_name']
         print (str(chatid) + ":" + message)
 
         if (message == "/start"):
