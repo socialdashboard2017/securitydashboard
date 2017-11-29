@@ -13,6 +13,7 @@ from functools import wraps
 from sqlalchemy import exists
 import scoring_functions
 
+import telegrambot
 
 
 app = Flask(__name__)
@@ -682,8 +683,10 @@ def save_scraped():
 						vuln_object = vulns_blogs(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
 						exists = db.session.query(vulns_blogs).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
 						if exists == False:
-							#if (ascore == 10):
-								#PUSH Bot
+							if (int(ascore) > 5):
+								single_vuln = {'name': str(vname) ,'score': ascore,'url': temp,'date':(key + ' ' + str(now.year)),'cve': cve(vname),'source': temp}
+								secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
+								secbot.push_update(db,single_vuln)
 							db.session.add(vuln_object)
 		i += 1
 

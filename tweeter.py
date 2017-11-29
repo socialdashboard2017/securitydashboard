@@ -260,6 +260,10 @@ def fetch_and_save_tweets_new(profile_name, no_of_tweets=10):
 				print (repr(formatted_tweet))
 				current_tweet = Tweets(**formatted_tweet)
 				db.session.add(current_tweet)
+				if (int(tweet_score) > 5):
+					single_vuln = {'name': str(decoded_tweet) ,'score': str(tweet_score),'url':value['url'],'date':datetime.datetime.now(),'cve': tweet_cve,'source': value['url']}
+					secbot = telegrambot.BotHandler()
+					secbot.push_update(db,single_vuln)
 
 		db.session.commit()
 

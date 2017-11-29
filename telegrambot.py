@@ -8,7 +8,7 @@ from models import subscriptors
 
 class BotHandler:
 
-    def __init__(self, token):
+    def __init__(self, token="351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E"):
         self.token = token
         self.api_url = "https://api.telegram.org/bot" + token + "/"
 
@@ -33,10 +33,11 @@ class BotHandler:
             last_update = get_result[len(get_result)]
             return last_update
 
-    def push_update(self,message):
-        with open("subscriptors.txt", "r") as file:
-            for line in file:
-                self.send_message(line,message)
+    def push_update(self,db,vuln):
+        subscribers = db.session.query(subscriptors).filter_by(push=True).all()
+        for subscriber in subscribers:
+            self.send_message(subscriber.chat_id,self.formatMessage(vuln))
+            print ("DEBUG: send to " + subscriber.chat_id + " - " + self.formatMessage(vuln))
 
     def check_new_subscriptors(self):
         updates = self.get_updates()
@@ -72,12 +73,12 @@ class BotHandler:
             if exists == False:
                 db.session.add(subs_object)
                 db.session.commit()
+            self.send_message(chatid,"Hello, " + name +  "! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
         if (message == "/stop"):
             subscriber = db.session.query(subscriptors).filter_by(chat_id=str(chatid)).first()
             if subscriber:
                 db.session.delete(subscriber)
                 db.session.commit()
-            self.send_message(chatid,"Hello, " + name +  "! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
         if (message == "/help"):
             self.send_message(chatid,""" 
 *** HELP ***
