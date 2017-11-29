@@ -263,7 +263,7 @@ def fetch_and_save_tweets_new(profile_name, no_of_tweets=10):
 				if (int(tweet_score) >= 7):
 					final_name = []
 					final_name.append(decoded_tweet)
-					Final_name.append(value['url'])
+					final_name.append(value['url'])
 					single_vuln = {'name': final_name ,'score': str(tweet_score),'url':value['url'],'date':datetime.datetime.now(),'cve': tweet_cve,'source': value['url']}
 					secbot = telegrambot.BotHandler()
 					secbot.push_update(db,single_vuln)
