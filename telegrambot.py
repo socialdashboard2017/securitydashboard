@@ -36,7 +36,7 @@ class BotHandler:
     def push_update(self,db,vuln):
         subscribers = db.session.query(subscriptors).filter_by(push=True).all()
         for subscriber in subscribers:
-            self.send_message(subscriber.chat_id,self.formatMessage(vuln))
+            self.send_message(subscriber.chat_id,self.formatMessage(vuln),disable_preview="true")
             print ("DEBUG: send to " + subscriber.chat_id + " - " + self.formatMessage(vuln))
 
     def check_new_subscriptors(self):

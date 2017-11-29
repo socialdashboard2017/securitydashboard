@@ -260,7 +260,7 @@ def fetch_and_save_tweets_new(profile_name, no_of_tweets=10):
 				print (repr(formatted_tweet))
 				current_tweet = Tweets(**formatted_tweet)
 				db.session.add(current_tweet)
-				if (int(tweet_score) >= 7):
+				if (int(tweet_score) == 10):
 					final_name = []
 					final_name.append(decoded_tweet)
 					final_name.append(value['url'])

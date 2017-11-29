@@ -683,7 +683,7 @@ def save_scraped():
 						vuln_object = vulns_blogs(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
 						exists = db.session.query(vulns_blogs).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
 						if exists == False:
-							if (int(ascore) >= 7):
+							if (int(ascore) == 10):
 								final_name = []
 								final_name.append(vname)
 								final_name.append(temp)
