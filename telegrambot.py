@@ -99,7 +99,7 @@ class BotHandler:
                 db.session.commit()
             self.send_message(chatid,"You are subscribed!")           
         if (message == "/unsubscribe"):
-            subscriber = db.session.query(subscribers).filter_by(chat_id=chatid).first()
+            subscriber = db.session.query(subscriptors).filter_by(chat_id=chatid).first()
             if subscriber:
                 db.session.delete(subscriber)
                 db.session.commit()
