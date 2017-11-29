@@ -72,7 +72,11 @@ class BotHandler:
             if exists == False:
                 db.session.add(subs_object)
                 db.session.commit()
-            
+        if (message == "/stop"):
+            subscriber = db.session.query(subscriptors).filter_by(chat_id=str(chatid)).first()
+            if subscriber:
+                db.session.delete(subscriber)
+                db.session.commit()
             self.send_message(chatid,"Hello, " + name +  "! I'm SecurityDashboardBot! Please to meet you!\nUse /help command for command list")
         if (message == "/help"):
             self.send_message(chatid,""" 
@@ -117,6 +121,11 @@ class BotHandler:
             subscriber = db.session.query(subscriptors).filter_by(chat_id=str(chatid)).first()
             if subscriber:
                 db.session.delete(subscriber)
+                db.session.commit()
+            subs_object = subscriptors(name = name, chat_id = chatid, push = False)
+            exists = db.session.query(subscriptors).filter_by(chat_id = str(chatid)).first() is not None
+            if exists == False:
+                db.session.add(subs_object)
                 db.session.commit()
             self.send_message(chatid,"You are unsubscribed!")            
         return "done"
