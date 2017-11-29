@@ -242,10 +242,10 @@ def fetch_and_save_tweets_new(profile_name, no_of_tweets=10):
 			tweet_cve = get_cve(decoded_tweet)
 			#tweet_score = api.get_sentiment_score(decoded_tweet)
 			tweet_score = scoring_functions.scoring(tweet_cve, decoded_tweet)
-			search_tweet = db.session.query(Tweets).filter_by(tweet = decoded_tweet).first()
-			exists = search_tweet is not None
-			if exists == True:
-				exists = search_tweet.score == tweet_score
+			exists = search_tweet = db.session.query(Tweets).filter_by(url = str(value['url'])).first()  is not None
+			#exists = search_tweet is not None
+			#if exists == True:
+			#	exists = search_tweet.score == tweet_score
 			print (exists, "exists:" + decoded_tweet) 
 			#exists = False
 			if exists == False:
