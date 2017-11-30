@@ -80,8 +80,8 @@
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav pull-right">
                 <li class="{% if request.path=="/" %}active{% endif %}"><a href="/"><i  class="fa fa-home fa-2x"></i></a></li>
-                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="/blogsforum"><i class="fa fa-globe fa-2x"></i></a></li>
-                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="/socials"><i  class="fa fa-twitter fa-2x"></i></a>
+                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="{{ url_for('show_blogsforum') }}"><i class="fa fa-globe fa-2x"></i></a></li>
+                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="{{ url_for('show_socials') }}"><i  class="fa fa-twitter fa-2x"></i></a>
 
                 <li  class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><i  class="fa fa-gear fa-2x"></i></a>
                   <ul class="dropdown-menu">
