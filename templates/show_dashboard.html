@@ -9,7 +9,7 @@
         <!-- Main content -->
         <section class="content">
           <h1>MAIN DASHBORD</h1>
-          <h3>Work in progress</h3>
+
           
             <table id="example" class="display" cellspacing='0' width='100%'>
                 <thead>
@@ -23,20 +23,34 @@
                 </thead>
                 <tbody>
                     {% for vuln in vulns %}
+                    
                     <tr>
               
                     <td><a href={{ vuln.name[1]}}  target="_blank">{{vuln.name[0] }}</td>            
-                    <td>{{ vuln.date.strftime('%d, %b %Y') }}</td>
+                    <td><p style="width:80px;">{{ vuln.date.strftime('%d,%b %Y') }}</p></td>
                     <td>{{ vuln.cve }}</td>
-                    <td>{{ vuln.score }}</td>
+                    <td>
+                    {% if (vuln.score|int >= 3 and vuln.score|int < 5)  %}
+                        <div class="led-yellow"><strong>{{ vuln.score }}</strong></div> 
+                    {% elif (vuln.score|int >= 5 and vuln.score|int < 7)  %}
+                        <div class="led-yellow"><strong>{{ vuln.score }}</strong></div> 
+                    {% elif (vuln.score|int >= 7 and vuln.score|int < 10)  %}
+                        <div class="led-orange"><strong>{{ vuln.score }}</strong></div> 
+                    {% elif (vuln.score|int == 10)  %}
+                        <div class="led-red"><strong>{{ vuln.score }}</strong></div>                         
+                    {% else %}                       
+                        <div class="led-green"><strong>{{ vuln.score }}</strong></div>  
+                    {% endif %}
+                    
+                    
+                    </td>
                     <td>{{ vuln.source }}</td>
 
                     </tr>
                     {% endfor %} 
                 </tbody>
             </table>
-          
-          
+        
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
       

@@ -28,3 +28,41 @@ footer {
     display: block;
     margin-top: 0;
  }
+ 
+ .led-red {
+    width: 22px;
+    height: 22px;
+    padding-left: 4px;
+    background-color: #940;
+    border-radius: 50%;
+    color:white;
+   /* box-shadow: #000 0 -1px 7px 1px, inset #600 0 -1px 9px, #F00 0 2px 12px; */
+}
+
+.led-yellow {
+    width: 22px;
+    height: 22px;
+    padding-left: 7px;
+    background-color: #A90;
+    border-radius: 50%;
+   /* box-shadow: #000 0 -1px 7px 1px, inset #660 0 -1px 9px, #DD0 0 2px 12px;*/
+}
+
+.led-green {
+    width: 22px;
+    height: 22px;
+    padding-left: 7px;
+    background-color: #690;
+    border-radius: 50%;
+   /* box-shadow: #000 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 2px 12px;*/
+}
+
+.led-orange {
+    /*margin: 20px auto;*/
+    width: 22px;
+    height: 22px;
+    padding-left: 7px;
+    background-color: #F69C37;
+    border-radius: 50%;
+    /* box-shadow: #000 0 -1px 7px 1px, inset #006 0 -1px 9px, #06F 0 2px 14px;*/
+}

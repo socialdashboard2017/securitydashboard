@@ -6,6 +6,9 @@ from spider import save_scraped
 from tweeter import getNegativeTweets, get_cve, get_cvss_rating, get_tweet_score, twitter_user_exist,fetchallprofiles,fetch_and_save_tweets, get_profile
 '''
 from sqlalchemy import desc
+from sqlalchemy import cast
+import sqlalchemy
+
 import ast
 from dateutil.parser import parse
 import datetime
@@ -53,8 +56,8 @@ def fetchBlogVulns(db, count=5):
 
 
 def fetchallvulns(db):
-    twitter_vulns = db.session.query(tweets).order_by(desc(tweets.id)).limit(5).all()
-    blogs_vulns = db.session.query(vulns_blogs).order_by(desc(vulns_blogs.id)).limit(5).all()
+    twitter_vulns = db.session.query(tweets).order_by(desc(tweets.id)).filter(cast(tweets.score,sqlalchemy.types.Integer ) > 7).limit(5).all()
+    blogs_vulns = db.session.query(vulns_blogs).order_by(desc(vulns_blogs.id)).filter(cast(vulns_blogs.score,sqlalchemy.types.Integer ) > 7).limit(5).all()
     all_vulns = []
     for tvuln in twitter_vulns:
         #print (tvuln)
