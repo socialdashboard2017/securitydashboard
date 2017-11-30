@@ -5,7 +5,8 @@ from functools import wraps
 from sqlalchemy import exists
 import telegrambot
 import scoring_functions
-
+from flask import send_from_directory
+import os
 app = Flask(__name__)
 
 app.config.from_object('config.BaseConfig')
@@ -361,6 +362,11 @@ def logout():
 	session['logged_in'] = False
 	return redirect(url_for('show_all'))
 
+#FAVICON
+@app.route('/favicon.ico')
+def favicon():
+	print ("favicon")
+	return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
 	#app.run(debug=True, ssl_context='adhoc',host='0.0.0.0', port=8080)

@@ -8,7 +8,7 @@
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">            
     <link rel="stylesheet" href="{{ url_for('static', filename='vuln.css') }}">
-    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
@@ -73,16 +73,17 @@
           <span class="logo-lg"><b>Security Dashboard</b></span>
         </a>
         <nav class="navbar navbar-static-top" role="navigation">
-            <!-- Sidebar toggle button
-            <a href="" class="navbar-brand">Dashboard</a>-->
+            
+            
+            
             
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav pull-right">
-                <li class="{% if request.path=="/" %}active{% endif %}"><a href="/">Dashboard</a></li>
-                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="/blogsforum">Blogs and Forums</a></li>
-                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="/socials">Social Networks</a>
+                <li class="{% if request.path=="/" %}active{% endif %}"><a href="/"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-home fa-2x"></i></a></li>
+                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="/blogsforum"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-globe fa-2x"></i></a></li>
+                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="/socials"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-twitter fa-2x"></i></a>
 
-                <li  class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" >Configurations</a>
+                <li  class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><i style="overflow: hidden;margin-top: -12px;" class="fa fa-gear fa-2x"></i></a>
                   <ul class="dropdown-menu">
                     <li><a href="{{ url_for('show_profiles') }}">Twitter Profiles</a></li>    
                     <li><a href="{{ url_for('show_keywords') }}">Social Networks Keywords</a></li>
@@ -90,7 +91,7 @@
                     <li><a href="{{ url_for('show_subscribers') }}">Telegram Subscribers</a></li>    
                   </ul>
                 </li>
-                <li><a style="color: maroon;" href="{{ url_for('logout') }}">Logout</a></li>
+                <li><a style="color: maroon;" href="{{ url_for('logout') }}"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-sign-out fa-2x"></i></a></li>
               </ul>
             </div>
           </nav>
