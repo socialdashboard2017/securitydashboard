@@ -6,7 +6,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -79,11 +79,11 @@
             
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav pull-right">
-                <li class="{% if request.path=="/" %}active{% endif %}"><a href="/"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-home fa-2x"></i></a></li>
-                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="/blogsforum"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-globe fa-2x"></i></a></li>
-                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="/socials"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-twitter fa-2x"></i></a>
+                <li class="{% if request.path=="/" %}active{% endif %}"><a href="/"><i  class="fa fa-home fa-2x"></i></a></li>
+                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="/blogsforum"><i class="fa fa-globe fa-2x"></i></a></li>
+                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="/socials"><i  class="fa fa-twitter fa-2x"></i></a>
 
-                <li  class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><i style="overflow: hidden;margin-top: -12px;" class="fa fa-gear fa-2x"></i></a>
+                <li  class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><i  class="fa fa-gear fa-2x"></i></a>
                   <ul class="dropdown-menu">
                     <li><a href="{{ url_for('show_profiles') }}">Twitter Profiles</a></li>    
                     <li><a href="{{ url_for('show_keywords') }}">Social Networks Keywords</a></li>
@@ -91,7 +91,7 @@
                     <li><a href="{{ url_for('show_subscribers') }}">Telegram Subscribers</a></li>    
                   </ul>
                 </li>
-                <li><a style="color: maroon;" href="{{ url_for('logout') }}"><i style="overflow: hidden;margin-top: -12px;" class="fa fa-sign-out fa-2x"></i></a></li>
+                <li><a style="color: maroon;" href="{{ url_for('logout') }}"><i  class="fa fa-sign-out fa-2x"></i></a></li>
               </ul>
             </div>
           </nav>
