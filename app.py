@@ -39,6 +39,12 @@ def ssl_required(fn):
 def login_required(f):
 	@wraps(f)
 	def wrap(*args, **kwargs):
+		
+		#Session variables len(db.session.query(vulns).all()) + len(db.session.query(Tweets).all())
+		session['total_social'] = len(db.session.query(vulns).all())
+		session['total_web'] = len(db.session.query(Tweets).all())
+		session['bot_subscribers'] = len(db.session.query(subscriptors).all())
+		
 		if session.get('logged_in'):
 			return f(*args, **kwargs)
 		else:
@@ -62,6 +68,12 @@ def check_on_all_tables():
 	#	db.session.query(vulns).delete()
 	#	db.session.query(Tweets).delete()
 	#	print('Deleting all records since total table length is >= 9000')
+
+
+#session variables
+
+
+
 
 
 #DEBUG JOBS
@@ -370,5 +382,7 @@ def favicon():
 
 if __name__ == '__main__':
 	#app.run(debug=True, ssl_context='adhoc',host='0.0.0.0', port=8080)
+
 	app.run(debug=True,host='0.0.0.0', port=8080)
+
 	# app.run(debug=True)

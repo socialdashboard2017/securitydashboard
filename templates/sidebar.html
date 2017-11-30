@@ -1,7 +1,7 @@
       <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-        <div class="user-panel">
+     <!--   <div class="user-panel">
             <div class="pull-left image">
               <img src="{{ url_for('static', filename='dist/img/avatar.png') }}" class="img-circle" alt="User Image">
             </div>
@@ -12,14 +12,15 @@
             
  
             
-          </div>
+          </div> -->
+          
       <ul class="sidebar-menu" data-widget="tree">
       <li class="header">Crawler Status</li>
       <!-- Optionally, you can add icons to the links -->
-      <li><a href="{{ url_for('show_socials') }}"><i class="fa fa-twitter"></i> <span>Crawled from Socials: 1000</span></a></li>
-      <li><a href="{{ url_for('show_blogsforum') }}"><i class="fa fa-globe"></i> <span>Crawled from Web: 1000</span></a></li>
+      <li><a href="{{ url_for('show_socials') }}"><i class="fa fa-twitter"></i> <span>Crawled from Socials: {{ session['total_social'] }}</span></a></li>
+      <li><a href="{{ url_for('show_blogsforum') }}"><i class="fa fa-globe"></i> <span>Crawled from Web: {{ session['total_web'] }}</span></a></li>
       <li class="header">Telegram BOT Status</li>
-      <li><a href="{{ url_for('show_subscribers') }}"><i class="fa fa-telegram"></i> <span>Subscribers: xxx</span></a></li>
+      <li><a href="{{ url_for('show_subscribers') }}"><i class="fa fa-telegram"></i> <span>Subscribers: {{ session['bot_subscribers'] }}</span></a></li>
       
     </ul>
         </section>

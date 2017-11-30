@@ -2,6 +2,20 @@
 {% include 'header.html' %}
 {% include 'sidebar.html' %}
 
+<script>
+    
+        $(document).ready(function() {
+      
+      $('#example').DataTable({
+                "order": [[ 3, "desc" ]],
+                 "paging":   false,
+                  "searching":   false,
+                  "ordering":   false,
+            });
+    });
+    
+    
+</script>
 
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">

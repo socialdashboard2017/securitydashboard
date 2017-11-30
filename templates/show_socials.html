@@ -2,6 +2,15 @@
 {% include 'header.html' %}
 {% include 'sidebar.html' %}
 
+    <script>
+    $(document).ready(function() {
+      $.fn.dataTable.moment( 'MMM DD YYYY' );
+      $('#example').DataTable({
+                "order": [[ 3, "desc" ]]
+            });
+    });
+    </script>
+    
 
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
