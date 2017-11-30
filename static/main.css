@@ -8,6 +8,7 @@ body {
   padding: 0px;
 }
 
+/*
 footer {
   position: absolute;
   left: 0;
@@ -16,7 +17,7 @@ footer {
   width: 100%;
   overflow:hidden;
 }
-
+*/
 @import url('http://getbootstrap.com/dist/css/bootstrap.css');
 
 
