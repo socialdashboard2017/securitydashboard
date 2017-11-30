@@ -17,6 +17,9 @@
 
         <!-- Main content -->
         <section class="content">
+                        
+            <h1>Social Networks</h1>
+            
             <table id="example" class="display" cellspacing='0' width='100%'>
                 <thead>
                     <tr>
@@ -31,7 +34,7 @@
                     {% for vuln in vulns %}
                     <tr>
                     <td><a href={{ vuln.name[1]}}  target="_blank">{{vuln.name[0] }}</td>            
-                    <td>{{ vuln.date.strftime('%d, %b %Y') }}</td>
+                    <td><p style="width:80px;">{{ vuln.date.strftime('%d, %b %Y') }}</p></td>
                     <td>{{ vuln.cve }}</td>
                     <td>{{ vuln.score }}</td>
                     <td>{{ vuln.source }}</td>
