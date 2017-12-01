@@ -26,7 +26,7 @@ def fetchSocialVulns(db, count=5):
         
         final_name = []
         final_name.append(tvuln.tweet)
-        final_name.append(tvuln.url)
+        final_name.append(tweet_url)
         
         #TODO
         # - needs to be implemented a TryParse for vulnerability date
