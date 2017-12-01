@@ -9,7 +9,7 @@ from models import subscriptors
 class BotHandler:
 
     def __init__(self, token="351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E"):
-        self.token = token
+        self.token = "477125668:AAGQmGBiN_m9DQE19vTorBHFn7BNisZW7dU" #sashabot
         self.api_url = "https://api.telegram.org/bot" + token + "/"
 
     def get_updates(self):
