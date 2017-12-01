@@ -687,7 +687,7 @@ def save_scraped():
 								final_name = []
 								final_name.append(vname)
 								final_name.append(temp)
-								single_vuln = {'name': final_name ,'score': ascore,'url': temp,'date':(key + ' ' + str(now.year)),'cve': cve(vname),'source': temp}
+								single_vuln = {'name': final_name ,'score': ascore,'url': temp,'date':datetime.datetime.now(),'cve': cve(vname),'source': temp}
 								secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 								secbot.push_update(db,single_vuln)
 							db.session.add(vuln_object)
