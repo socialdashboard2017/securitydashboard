@@ -79,11 +79,11 @@
             
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav pull-right">
-                <li class="{% if request.path=="/" %}active{% endif %}"><a href="/"><i  class="fa fa-home fa-2x"></i></a></li>
-                <li class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="{{ url_for('show_blogsforum') }}"><i class="fa fa-globe fa-2x"></i></a></li>
-                <li  class="{% if request.path=="/socials" %}active{% endif %}"><a href="{{ url_for('show_socials') }}"><i  class="fa fa-twitter fa-2x"></i></a>
+                <li tooltip="Main dashboard" class="{% if request.path=="/" %}active{% endif %}"><a href="/"><i  class="fa fa-home fa-2x"></i></a></li>
+                <li tooltip="Vulnerabilities from Blogs and Forums" class="{% if request.path=="/blogsforum" %}active{% endif %}"><a href="{{ url_for('show_blogsforum') }}"><i class="fa fa-globe fa-2x"></i></a></li>
+                <li tooltip="Vulnerabilities from Social Networks" class="{% if request.path=="/socials" %}active{% endif %}"><a href="{{ url_for('show_socials') }}"><i  class="fa fa-twitter fa-2x"></i></a>
 
-                <li  class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><i  class="fa fa-gear fa-2x"></i></a>
+                <li class="dropdown-toggle dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><i  class="fa fa-gear fa-2x"></i></a>
                   <ul class="dropdown-menu">
                     <li><a href="{{ url_for('show_profiles') }}">Twitter Profiles</a></li>    
                     <li><a href="{{ url_for('show_keywords') }}">Social Networks Keywords</a></li>
@@ -91,7 +91,7 @@
                     <li><a href="{{ url_for('show_subscribers') }}">Telegram Subscribers</a></li>    
                   </ul>
                 </li>
-                <li><a style="color: maroon;" href="{{ url_for('logout') }}"><i  class="fa fa-sign-out fa-2x"></i></a></li>
+                <li tooltip="LogOut" ><a style="color: maroon;" href="{{ url_for('logout') }}"><i  class="fa fa-sign-out fa-2x"></i></a></li>
               </ul>
             </div>
           </nav>
