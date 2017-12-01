@@ -682,12 +682,13 @@ def save_scraped():
 						temp = allSource[i]
 						vuln_object = vulns_blogs(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp)
 						exists = db.session.query(vulns_blogs).filter_by(name = str(get_link(vname, temp)), date = (key + ' ' + str(now.year)), my_cve = cve(vname), score = ascore, source = temp).first() is not None
+						#exists=False
 						if exists == False:
 							if (int(ascore) == 10):
 								final_name = []
 								final_name.append(vname)
 								final_name.append(temp)
-								single_vuln = {'name': final_name ,'score': ascore,'url': temp,'date':datetime.datetime.now(),'cve': cve(vname),'source': temp}
+								single_vuln = {'name': get_link(vname, temp) ,'score': ascore,'url': temp,'date':datetime.datetime.now(),'cve': cve(vname),'source': temp}
 								secbot = telegrambot.BotHandler("351082352:AAHLBZW4ObbsMVHh4lrcwZOVHmvKsfyM59E")
 								secbot.push_update(db,single_vuln)
 							db.session.add(vuln_object)
