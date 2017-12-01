@@ -22,6 +22,8 @@ def fetchSocialVulns(db, count=5):
         #print (tvuln)
         profile_array = db.session.query(profiles).filter_by(id=tvuln.profile_id).all()
         profile_name = profile_array[0].name
+        tweet_url = str(tvuln.url).replace("statuses",profile_name + "/status")
+        
         final_name = []
         final_name.append(tvuln.tweet)
         final_name.append(tvuln.url)
@@ -33,7 +35,7 @@ def fetchSocialVulns(db, count=5):
         except ValueError:
             d = datetime.datetime.now()
             
-        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tvuln.url,'date': d,'cve': tvuln.cve,'source': "@" + profile_name}
+        single_vuln = {'name': final_name ,'score': tvuln.score,'url': tweet_url,'date': d,'cve': tvuln.cve,'source': "@" + profile_name}
         all_vulns.append(single_vuln)
     all_vulns = sorted(all_vulns, key=lambda x: x['date'], reverse=True)
     return all_vulns
@@ -63,9 +65,12 @@ def fetchallvulns(db):
         #print (tvuln)
         profile_array = db.session.query(profiles).filter_by(id=tvuln.profile_id).all()
         profile_name = profile_array[0].name
+        tweet_url = str(tvuln.url).replace("statuses",profile_name + "/status")
+        
+        
         final_name = []
         final_name.append(tvuln.tweet)
-        final_name.append(tvuln.url)
+        final_name.append(tweet_url)
         try:
             d = parse(tvuln.date)
         except ValueError:
